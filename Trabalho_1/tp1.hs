@@ -10,15 +10,15 @@ type Item = (Produto, Quantidade)
 
 produtos :: [Produto]
 produtos = 
-  [ ("Arroz", 5.0)
-  , ("Feijão", 4.5)
-  , ("Macarrão", 3.2)
-  , ("Farinha", 2.8)
+  [ ("AMENDOIM", 3.99)
+  , ("HEINKEN 5L", 64.99)
+  , ("AGUA MINERAL", 2.50)
+  , ("CHOCOLATE", 3.99)
+  , ("LEITE", 2.99)
   , ("Açúcar", 3.0)
   , ("Café", 6.5)
   , ("Óleo", 4.7)
   , ("Sal", 1.5)
-  , ("Leite", 4.0)
   , ("Biscoito", 2.2)
   ]
 
@@ -93,13 +93,54 @@ alinhaDir str c n = repete c (n - length str) ++ str
 -- esse valor em uma String com um cifrão ($) na frente e sempre dois algarismos depois do ponto.
 
 ($$) :: Valor -> Int -> [Char]
-valor $$ n = 
-    let inteiro = floor valor
-        decimal = (valor - fromIntegral inteiro) *10 ^ n
-        inteiroStr = show inteiro
-        decimalStr = show decimal
-        decimalStr' = if length decimalStr < n then repete '0' (n - length decimalStr) ++ decimalStr else decimalStr
-    in inteiroStr ++ "." ++ decimalStr'
+valor $$ n = inteiroStr ++ "." ++ decimalStr'
+  where
+    inteiro = truncate valor
+    decimal = truncate ((valor - fromIntegral inteiro) *10 ^ n)
+    inteiroStr = show inteiro
+    decimalStr = show decimal
+    decimalStr' = if length decimalStr < n then repete '0' (n - length decimalStr) ++ decimalStr else decimalStr
+    
 
 dinheiro :: Valor -> [Char]
 dinheiro valor = "$" ++ (valor $$ 2)
+
+-- Questão 06 - Crie uma função chamada formataItem que recebe um Item e retorna um item
+-- da nota fiscal em uma String de 80 caracteres. Essa função deve formatar a String retornada
+-- utilizando espaços em banco da seguinte forma: 45 caracteres para o nome do produto; 25 para o
+-- valor e a quantidade; e 10 para o subtotal.
+
+formataItem :: Item -> [Char]
+formataItem (produto, quantidade) = nome ++ valor ++ quantidade1 ++ subtotal 
+  where
+    nome = alinhaEsq (fst produto) '.' 45
+    valor = alinhaDir (dinheiro (snd produto)) '.' 25
+    quantidade1 = " x " ++ show quantidade ++ " = "
+    subtotal = alinhaDir (dinheiro (fromIntegral quantidade * snd produto)) ' ' 10
+
+-- Questão 07 - Crie uma função chamada total que recebe como entrada uma lista de itens,
+-- calcula o valor total dos itens da lista e retorna esse valor formatado como dinheiro. 
+-- O valor total é igual à soma de dos valores dos produtos dos itens de venda multiplicados por sua quantidade
+-- vendida.
+
+-- item = (produto, quantidade)
+  -- produto = (nome, valor)
+total :: [Item] -> [Char]
+total lista =  dinheiro total1
+  where
+    total1 = sum [fromIntegral quantidade * valor | ((_,valor),quantidade) <- lista]
+
+-- Questão 08 Crie uma função chamada notafiscal que recebe como entrada uma lista de
+-- itens e retorna uma String que representa a nota fiscal da venda. A largura da linha da nota é 80
+-- caracteres.
+
+notafiscal :: [Item] -> [Char]
+notafiscal lista = "\n" ++ repete '*' 50 ++ "\n" 
+                        ++ cabecalho ++ "\n"
+                        ++ itens 
+                        ++ total2
+                        ++ repete '*' 50 ++ "\n"
+  where
+    cabecalho = alinhaEsq "NOTA FISCAL" ' ' 80
+    itens = concat [formataItem item ++ "\n" | item <- lista]
+    total2 = alinhaEsq "TOTAL" '.' 45 ++ total lista ++ "\n"
