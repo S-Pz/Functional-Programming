@@ -1,3 +1,6 @@
+import Data.Maybe (fromMaybe)
+
+
 -- Questão 01: Crie os tipos: Nome, equivalente a String; Valor, equivalente a Float;
 -- Quantidade, equivalente a Int; Produto, com nome e valor; Item, com produto e quantidade.
 -- Crie uma função chamada produtos que retorna uma lista com 10 produtos a sua escolha.
@@ -15,9 +18,9 @@ produtos =
   , ("AGUA MINERAL", 2.50)
   , ("CHOCOLATE", 3.99)
   , ("LEITE", 2.99)
-  , ("Açúcar", 3.0)
-  , ("Café", 6.5)
-  , ("Óleo", 4.7)
+  , ("Acucar", 3.0)
+  , ("Cafe", 6.5)
+  , ("Oleo", 4.7)
   , ("Sal", 1.5)
   , ("Biscoito", 2.2)
   ]
@@ -145,3 +148,22 @@ notafiscal lista = putStr ("\n" ++ repete '*' 80 ++ "\n"
     cabecalho = alinhaDir "NOTA FISCAL" ' ' 45
     itens = concat [formataItem item ++ "\n" | item <- lista]
     total2 = alinhaEsq "TOTAL" '.' 45 ++ total lista ++ "\n"
+
+
+-- Questao 09 Crie a função proditem que não possui entradas e retorna uma lista de Item contendo todos os
+-- elementos da lista produtos e a quantidade sendo o índice de cada produto na lista.
+-- Crie também a função proditemx, que é semelhante a função proditem, porém recebe como entrada as uma
+-- lista de quantidades.
+-- Se esta lista de quantidades for menor que a lista de produtos, então somente os n primeiros produtos são
+-- considerados, onde n é o tamanho da lista de quantidades.
+
+prodItem :: [Item]
+prodItem = [(x, prodItemaux x) | x <- produtos]
+ 
+prodItemaux :: Produto -> Int
+prodItemaux x = 1 + fromMaybe 0 (index x produtos)
+
+proditemx :: [Quantidade] -> [Item]
+proditemx lista_q = [(x, lista_q !! fromMaybe 0 (index x produtos)) | x <- produtos, fromMaybe 0 (index x produtos) < (length lista_q)]
+    
+
