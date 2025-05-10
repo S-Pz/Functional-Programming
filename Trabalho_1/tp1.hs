@@ -134,13 +134,15 @@ total lista =  dinheiro total1
 -- itens e retorna uma String que representa a nota fiscal da venda. A largura da linha da nota é 80
 -- caracteres.
 
-notafiscal :: [Item] -> [Char]
-notafiscal lista = "\n" ++ repete '*' 50 ++ "\n" 
-                        ++ cabecalho ++ "\n"
-                        ++ itens 
-                        ++ total2
-                        ++ repete '*' 50 ++ "\n"
+notafiscal :: [Item] -> IO()
+notafiscal lista = putStr ("\n" ++ repete '*' 80 ++ "\n"
+                            ++ cabecalho ++ "\n"
+                            ++ repete '*' 80 ++ "\n\n"
+                            ++ itens 
+                            ++ repete '*' 80 ++ "\n"
+                            ++ total2
+                            ++ repete '*' 80 ++ "\n")
   where
-    cabecalho = alinhaEsq "NOTA FISCAL" ' ' 80
+    cabecalho = alinhaDir "NOTA FISCAL" ' ' 45
     itens = concat [formataItem item ++ "\n" | item <- lista]
     total2 = alinhaEsq "TOTAL" '.' 45 ++ total lista ++ "\n"
