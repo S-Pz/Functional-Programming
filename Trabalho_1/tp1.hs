@@ -111,11 +111,10 @@ dinheiro valor = "$" ++ (valor $$ 2)
 -- valor e a quantidade; e 10 para o subtotal.
 
 formataItem :: Item -> [Char]
-formataItem (produto, quantidade) = nome ++ valor ++ quantidade1 ++ subtotal 
+formataItem (produto, quantidade) = nome ++ valor ++ subtotal 
   where
     nome = alinhaEsq (fst produto) '.' 45
-    valor = alinhaDir (dinheiro (snd produto)) '.' 25
-    quantidade1 = " x " ++ show quantidade ++ " = "
+    valor = alinhaDir (dinheiro (snd produto) ++ " x " ++ show quantidade ++ " = ") '.' 25
     subtotal = alinhaDir (dinheiro (fromIntegral quantidade * snd produto)) ' ' 10
 
 -- Questão 07 - Crie uma função chamada total que recebe como entrada uma lista de itens,
