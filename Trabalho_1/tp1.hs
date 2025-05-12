@@ -12,16 +12,16 @@ type Item = (Produto, Quantidade)
 
 produtos :: [Produto]
 produtos = 
-  [ ("AMENDOIM", 3.99)
-  , ("AGUA MINERAL", 2.50)
-  , ("CHOCOLATE", 3.99)
-  , ("Acucar", 3.0)
-  , ("LEITE", 2.99)
-  , ("Cafe", 6.5)
-  , ("Oleo", 4.7)
-  , ("Sal", 1.5)
-  , ("Biscoito", 2.2)
-  , ("HEINKEN 5L", 64.99)
+  [ ("AMENDOIM", 3.99),
+    ("AGUA MINERAL", 2.50),
+    ("CHOCOLATE", 3.99),
+    ("ACUCAR", 3.0),
+    ("LEITE", 2.99),
+    ("CAFE", 6.5),
+    ("FEIJAO", 4.7),
+    ("SAL", 1.5),
+    ("ARROZ", 2.2),
+    ("HEINKEN 5L", 64.99)
   ]
 
 -- Questão 02  Crie as seguintes funções auxiliares: 
@@ -135,18 +135,18 @@ total lista =  dinheiro total1
 -- itens e retorna uma String que representa a nota fiscal da venda. A largura da linha da nota é 80
 -- caracteres.
 
-notafiscal :: [Item] -> IO()
-notafiscal lista = putStr ("\n" ++ repete '*' 80 ++ "\n"
+notafiscal :: [Item] -> [Char] 
+notafiscal lista = "\n" ++ repete '*' 80 ++ "\n"
                             ++ cabecalho ++ "\n"
                             ++ repete '*' 80 ++ "\n\n"
                             ++ itens 
                             ++ "\n" ++ repete '*' 80 ++ "\n"
                             ++ total2
-                            ++ repete '*' 80 ++ "\n")
+                            ++ repete '*' 80 ++ "\n"
   where
     cabecalho = alinhaDir "NOTA FISCAL" ' ' 45
     itens = concat [formataItem item ++ "\n" | item <- lista]
-    total2 = alinhaDir "TOTAL" ' ' 73 ++ total lista ++ "\n"
+    total2 = alinhaDir "TOTAL: " ' ' 73 ++ total lista ++ "\n"
 
 
 -- Questao 09 Crie a função proditem que não possui entradas e retorna uma lista de Item contendo todos os
@@ -175,13 +175,17 @@ proditemx lista_q = [(x, lista_q !! fromMaybe 0 (index x produtos)) | x <- produ
 -- Crie também a função chamada itensi que recebe uma lista da tupla(Int, Quantidade) e retorna uma lista do tipo Item, sendo que  
 -- o Int da tupla corresponde ao índice na lista produtos.
 
-itensn :: [(Nome, Quantidade)] -> [Item]
-itensn lista = [(p, q) | (n, q) <- lista, p <- produtos, fst p == n]
+-- itensn :: [(Nome, Quantidade)] -> [Item]
+-- itensn lista = [(p, q) | (n, q) <- lista, p <- produtos,  p == n]
 
+itensn ::[(Nome, Quantidade)] -> [Item]
+itensn lista = [(produto, quantidade) | (nome, quantidade) <- lista, Just produto <- [buscaProduto produtos nome]]
+
+-- itensi :: [(Int, Quantidade)] -> [Item]
+-- itensi lista = [(produtos !! i, q) | (i, q) <- lista]
 
 itensi :: [(Int, Quantidade)] -> [Item]
-itensi lista = [(produtos !! i, q) | (i, q) <- lista]
-
+itensi lista = [(produto, quantidade) | (indice, quantidade) <- lista, Just produto <- [elemento produtos indice]]
 
 -- Questao 11
 -- Crie a função venda que recebe uma lista de Item e realiza a venda, imprimindoa nota fiscal.
@@ -189,4 +193,4 @@ itensi lista = [(produtos !! i, q) | (i, q) <- lista]
 
 venda :: [Item] -> IO()
 
-venda lista_item = notafiscal lista_item 
+venda lista_item = putStr (notafiscal lista_item )
