@@ -1,6 +1,5 @@
 import Data.Maybe (fromMaybe)
 
-
 -- Questão 01: Crie os tipos: Nome, equivalente a String; Valor, equivalente a Float;
 -- Quantidade, equivalente a Int; Produto, com nome e valor; Item, com produto e quantidade.
 -- Crie uma função chamada produtos que retorna uma lista com 10 produtos a sua escolha.
@@ -14,15 +13,15 @@ type Item = (Produto, Quantidade)
 produtos :: [Produto]
 produtos = 
   [ ("AMENDOIM", 3.99)
-  , ("HEINKEN 5L", 64.99)
   , ("AGUA MINERAL", 2.50)
   , ("CHOCOLATE", 3.99)
-  , ("LEITE", 2.99)
   , ("Acucar", 3.0)
+  , ("LEITE", 2.99)
   , ("Cafe", 6.5)
   , ("Oleo", 4.7)
   , ("Sal", 1.5)
   , ("Biscoito", 2.2)
+  , ("HEINKEN 5L", 64.99)
   ]
 
 -- Questão 02  Crie as seguintes funções auxiliares: 
@@ -141,13 +140,13 @@ notafiscal lista = putStr ("\n" ++ repete '*' 80 ++ "\n"
                             ++ cabecalho ++ "\n"
                             ++ repete '*' 80 ++ "\n\n"
                             ++ itens 
-                            ++ repete '*' 80 ++ "\n"
+                            ++ "\n" ++ repete '*' 80 ++ "\n"
                             ++ total2
                             ++ repete '*' 80 ++ "\n")
   where
     cabecalho = alinhaDir "NOTA FISCAL" ' ' 45
     itens = concat [formataItem item ++ "\n" | item <- lista]
-    total2 = alinhaEsq "TOTAL" '.' 45 ++ total lista ++ "\n"
+    total2 = alinhaDir "TOTAL" ' ' 73 ++ total lista ++ "\n"
 
 
 -- Questao 09 Crie a função proditem que não possui entradas e retorna uma lista de Item contendo todos os
@@ -161,9 +160,33 @@ prodItem :: [Item]
 prodItem = [(x, prodItemaux x) | x <- produtos]
  
 prodItemaux :: Produto -> Int
-prodItemaux x = 1 + fromMaybe 0 (index x produtos)
+prodItemaux x = fromMaybe (1 + length produtos) (index x produtos)
+-- a expressao no fromMaybe foi inserida para os casos que o retorno for Nothing
+-- pois o item pode ser encontrado na posicao 0 e fromMaybe não aceita numero negativo
 
 proditemx :: [Quantidade] -> [Item]
 proditemx lista_q = [(x, lista_q !! fromMaybe 0 (index x produtos)) | x <- produtos, fromMaybe 0 (index x produtos) < (length lista_q)]
-    
 
+
+-- Questao 10
+-- Crie a função chamada itensn que recebe uma lista da tupla(Nome,Quantidade) e retorna uma lista do tipo 
+-- Item, com os produtos identificados a partir do nome na lista produtos (Questão 1).  
+
+-- Crie também a função chamada itensi que recebe uma lista da tupla(Int, Quantidade) e retorna uma lista do tipo Item, sendo que  
+-- o Int da tupla corresponde ao índice na lista produtos.
+
+itensn :: [(Nome, Quantidade)] -> [Item]
+itensn lista = [(p, q) | (n, q) <- lista, p <- produtos, fst p == n]
+
+
+itensi :: [(Int, Quantidade)] -> [Item]
+itensi lista = [(produtos !! i, q) | (i, q) <- lista]
+
+
+-- Questao 11
+-- Crie a função venda que recebe uma lista de Item e realiza a venda, imprimindoa nota fiscal.
+-- O tipo de retorno dessa função é IO().
+
+venda :: [Item] -> IO()
+
+venda lista_item = notafiscal lista_item 
