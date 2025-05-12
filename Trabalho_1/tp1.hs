@@ -148,7 +148,6 @@ notafiscal lista = "\n" ++ repete '*' 80 ++ "\n"
     itens = concat [formataItem item ++ "\n" | item <- lista]
     total2 = alinhaDir "TOTAL: " ' ' 73 ++ total lista ++ "\n"
 
-
 -- Questao 09 Crie a função proditem que não possui entradas e retorna uma lista de Item contendo todos os
 -- elementos da lista produtos e a quantidade sendo o índice de cada produto na lista.
 -- Crie também a função proditemx, que é semelhante a função proditem, porém recebe como entrada as uma
@@ -192,5 +191,18 @@ itensi lista = [(produto, quantidade) | (indice, quantidade) <- lista, Just prod
 -- O tipo de retorno dessa função é IO().
 
 venda :: [Item] -> IO()
-
 venda lista_item = putStr (notafiscal lista_item )
+
+
+-- FUNÇÕES ALTERNATIVAS PARA RECEBER UMA LISTA DE PRODUTOS PELO USUÁRIO
+itensn2 ::[(Nome, Quantidade)] -> [Produto]-> [Item]
+itensn2 lista produtos= [(produto, quantidade) | (nome, quantidade) <- lista, Just produto <- [buscaProduto produtos nome]]
+
+itensi2 :: [(Int, Quantidade)] -> [Produto]-> [Item]
+itensi2 lista produtos = [(produto, quantidade) | (indice, quantidade) <- lista, Just produto <- [elemento produtos indice]]
+
+venda2 :: [(Int, Quantidade)]-> [Produto] -> IO()
+venda2 lista_item produtos = putStr (notafiscal (itensi2 lista_item produtos) )
+
+-- EX = venda2 [(0,2),(2,5),(4,10)] produtos2
+-- produtos2 = [("AGUA MINERAL",2.5),("CHOCOLATE",3.99),("LEITE",2.99)]
