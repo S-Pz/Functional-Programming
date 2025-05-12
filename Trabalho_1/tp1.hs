@@ -1,6 +1,5 @@
 import Data.Maybe (fromMaybe)
 
-
 -- Questão 01: Crie os tipos: Nome, equivalente a String; Valor, equivalente a Float;
 -- Quantidade, equivalente a Int; Produto, com nome e valor; Item, com produto e quantidade.
 -- Crie uma função chamada produtos que retorna uma lista com 10 produtos a sua escolha.
@@ -165,5 +164,18 @@ prodItemaux x = 1 + fromMaybe 0 (index x produtos)
 
 proditemx :: [Quantidade] -> [Item]
 proditemx lista_q = [(x, lista_q !! fromMaybe 0 (index x produtos)) | x <- produtos, fromMaybe 0 (index x produtos) < (length lista_q)]
-    
+
+
+-- Questao 10 Crie a função chamada itensn que recebe uma lista da tupla(Nome,Quantidade) e retorna uma lista do tipo 
+-- Item, com os produtos identificados a partir do nome na lista produtos (Questão 1).  
+
+-- Crie também a função chamada itensi que recebe uma lista da tupla(Int, Quantidade) e retorna uma lista do tipo Item, sendo que  
+-- o Int da tupla corresponde ao índice na lista produtos.
+
+itensn :: [(Nome, Quantidade)] -> [Item]
+itensn lista = [(p, q) | (n, q) <- lista, p <- produtos, fst p == n]
+
+
+itensi :: [(Int, Quantidade)] -> [Item]
+itensi lista = [(produtos !! i, q) | (i, q) <- lista]
 
