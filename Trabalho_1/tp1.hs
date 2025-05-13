@@ -94,6 +94,7 @@ alinhaDir str c n = repete c (n - length str) ++ str
 -- Crie também uma função chamada dinheiro que recebe um Valor e usa o operador $$ para transformar
 -- esse valor em uma String com um cifrão ($) na frente e sempre dois algarismos depois do ponto.
 
+infix 5 $$
 ($$) :: Valor -> Int -> [Char]
 valor $$ n = inteiroStr ++ "." ++ decimalStr'
   where
