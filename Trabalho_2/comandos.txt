@@ -1,0 +1,8 @@
+compilar executavel
+ghc -o program Biblioteca/Main.o Biblioteca/Alunos.o Biblioteca/Dados.o Biblioteca/Emprestimo.o Biblioteca/Livros.o Biblioteca/Util.o
+
+OU
+
+ghc -i. Biblioteca/Main.hs -o programa
+--- este comando ja busca por todos os modulos e compila o executavel
+--- IMPORTANTE: EXECUTAR COMANDO NA PASTA RAIZ DE BIBLIOTECA

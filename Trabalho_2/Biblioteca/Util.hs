@@ -1,4 +1,5 @@
-module Util where 
+module Biblioteca.Util where
+
 data Data = Data {dia:: Int, mes:: Int , ano:: Int}
         deriving (Eq, Show)
 

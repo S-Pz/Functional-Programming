@@ -1,3 +1,3 @@
-module Alunos where 
+module Biblioteca.Alunos where 
     data Aluno = Aluno {codigo:: Int, nome:: String , email:: String}
 --            deriving (Eq, Show)
