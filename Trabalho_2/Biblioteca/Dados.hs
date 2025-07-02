@@ -1,8 +1,9 @@
 module Biblioteca.Dados where
 
-class Dados d where
-  toString :: d -> String
-  size :: d -> Int
+class Dado d where
+    toString :: d -> String
+    size :: d -> Int
+    imprimir :: Dado d => d -> IO ()
 
 
 data Set t = EmptySet | St t (Set t)
