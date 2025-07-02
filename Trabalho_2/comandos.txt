@@ -3,6 +3,6 @@ ghc -o program Biblioteca/Main.o Biblioteca/Alunos.o Biblioteca/Dados.o Bibliote
 
 OU
 
-ghc -i. Biblioteca/Main.hs -o programa
+ghc -i. Biblioteca/Main.hs -o program
 --- este comando ja busca por todos os modulos e compila o executavel
 --- IMPORTANTE: EXECUTAR COMANDO NA PASTA RAIZ DE BIBLIOTECA
