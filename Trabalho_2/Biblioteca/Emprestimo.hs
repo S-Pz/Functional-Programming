@@ -11,6 +11,15 @@ module Biblioteca.Emprestimo where
         livros:: [Livro]
     } deriving (Eq, Show)
 
+    adicionaEmprestimos :: IO [String]
+    adicionaEmprestimos = do
+        putStrLn "Digite o registro de um livro (ou deixe em branco para finalizar):"
+        regStr <- getLine
+        if regStr == "" then return []
+        else do
+            maisRegs <- lerRegistrosLivros
+            return (regStr : maisRegs)
+    
     instance Dado Emprestimo where
         imprimir (Emprestimo num aluno dataEmp dataDev livros) = do
             putStrLn "========================================="
@@ -24,5 +33,25 @@ module Biblioteca.Emprestimo where
             putStrLn "\n--- Livros Emprestados ---------------"
             mapM_ imprimir livros
             putStrLn "========================================="
-        toString = show
-        size _ = 1
+        
+        cadastrar (Emprestimo num aluno dataEmp dataDev livros) = do 
+            handle <- openFile "emprestimos.txt" AppendMode
+            putStrLn "=========================================="
+            putStrLn "         CADASTRO DE EMPRÉSTIMO"
+            putStrLn "------------------------------------------"
+
+            putStrLn "Digite o número do empréstimo:"
+            num<- getLine
+            let numEmp = read num :: Int
+
+            putStrLn "Digite o código do aluno:"
+            codAlunoStr <- getLine
+
+            putStrLn "Digite a data do empréstimo (ex: DD/MM/AAAA):"
+            dataEmp <- getLine
+
+            putStrLn "Digite a data de devolução (ex: DD/MM/AAAA):"
+            dataDev <- getLine
+
+            putStrLn "Adicionar Livros"
+            listaRegistros <- adicionaEmprestimos

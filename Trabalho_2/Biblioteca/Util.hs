@@ -1,4 +1,6 @@
 module Biblioteca.Util where
+    -- Criar o where para as funções repete e alinhaEsq, só para facilitar as expostações
+    -- Para a prova Eq, Show e ord <- gravar pq cai na prova de Programação funcional 
     data Data = Data {
         dia:: Int,
         mes:: Int,
