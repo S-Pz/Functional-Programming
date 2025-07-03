@@ -27,8 +27,8 @@ module Biblioteca.Emprestimo where
             putStrLn "           DETALHES DO EMPRÉSTIMO"
             putStrLn "-----------------------------------------"
             putStrLn (formata "Número" (show num))
-            putStrLn (formata "Data de Empréstimo" (show dataEmp))
-            putStrLn (formata "Data de Devolução" (show dataDev))
+            putStrLn (formata "Data de Empréstimo" (dataStr dataEmp))
+            putStrLn (formata "Data de Devolução" (dataStr dataDev))
             putStrLn "\n--- Aluno -----------------------------"
             imprimir aluno
             putStrLn "\n--- Livros Emprestados ---------------"
