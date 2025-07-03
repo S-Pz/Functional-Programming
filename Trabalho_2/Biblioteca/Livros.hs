@@ -1,5 +1,6 @@
 module Biblioteca.Livros where 
-    
+    import Biblioteca.Dados
+    import System.IO
     data Livro = Livro {
         registro:: Int,
         titulo:: String,
