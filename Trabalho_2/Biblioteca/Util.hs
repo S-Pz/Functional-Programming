@@ -30,3 +30,4 @@ module Biblioteca.Util where
     formata:: String -> String -> String
     formata [] [] = []
     formata chave valor = alinhaEsq chave '.' 30 ++ ":" ++ alinhaDir valor ' ' 50
+    

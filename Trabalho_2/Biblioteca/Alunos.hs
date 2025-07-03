@@ -1,6 +1,6 @@
-module Alunos where 
+module Biblioteca.Alunos where 
     import Biblioteca.Dados
-    
+    import System.IO
     data Aluno = Aluno {
         codigo:: Int, 
         nome:: String ,
@@ -9,7 +9,7 @@ module Alunos where
 
     instance Dado Aluno where
         imprimir (Aluno cod nome email) = do
-            putStrLn ("Código do Aluno: " ++ show codigo)
+            putStrLn ("Código do Aluno: " ++ show cod)
             putStrLn ("Nome: " ++ nome)
             putStrLn ("Email: " ++ email)
        

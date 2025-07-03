@@ -2,7 +2,8 @@ module Biblioteca.Emprestimo where
     import Biblioteca.Alunos
     import Biblioteca.Livros
     import Biblioteca.Util
-
+    import Biblioteca.Dados
+    import System.IO
     data Emprestimo = Emprestimo {
         numero:: Int,
         aluno:: Aluno,
@@ -17,7 +18,7 @@ module Biblioteca.Emprestimo where
         regStr <- getLine
         if regStr == "" then return []
         else do
-            maisRegs <- lerRegistrosLivros
+            maisRegs <- adicionaEmprestimos
             return (regStr : maisRegs)
     
     instance Dado Emprestimo where
@@ -26,8 +27,8 @@ module Biblioteca.Emprestimo where
             putStrLn "           DETALHES DO EMPRÉSTIMO"
             putStrLn "-----------------------------------------"
             putStrLn (formata "Número" (show num))
-            putStrLn (formata "Data de Empréstimo" (show dEmp))
-            putStrLn (formata "Data de Devolução" (show dDev))
+            putStrLn (formata "Data de Empréstimo" (show dataEmp))
+            putStrLn (formata "Data de Devolução" (show dataDev))
             putStrLn "\n--- Aluno -----------------------------"
             imprimir aluno
             putStrLn "\n--- Livros Emprestados ---------------"
@@ -55,3 +56,5 @@ module Biblioteca.Emprestimo where
 
             putStrLn "Adicionar Livros"
             listaRegistros <- adicionaEmprestimos
+            putStrLn "Adicionar Livros"
+            
