@@ -1,5 +1,6 @@
 module Alunos where 
     import Biblioteca.Dados
+    
     data Aluno = Aluno {
         codigo:: Int, 
         nome:: String ,
@@ -11,5 +12,28 @@ module Alunos where
             putStrLn ("Código do Aluno: " ++ show codigo)
             putStrLn ("Nome: " ++ nome)
             putStrLn ("Email: " ++ email)
-        toString = show
-        size _= 1
+       
+        cadastrar (Aluno cod nome email) = do -- Usamos '_' pois o argumento não é relevante aqui
+            handle <- openFile "alunos.txt" AppendMode
+            putStrLn "=========================================="
+            putStrLn "           CADASTRO DE ALUNO"
+            putStrLn "------------------------------------------"
+
+            putStrLn "Digite o código do aluno:"
+            codigoStr <- getLine
+            let codigoAluno = read codigoStr :: Int -- Converte String para Int
+
+            putStrLn "Digite o nome do aluno:"
+            nomeAluno <- getLine
+
+            putStrLn "Digite o email do aluno:"
+            emailAluno <- getLine
+
+            hPutStrLn handle (show codigoAluno ++ ", " ++ nomeAluno ++ ", " ++ emailAluno)
+            hClose handle
+
+            putStrLn "\nAluno cadastrado com sucesso!"
+            putStrLn "=========================================="
+
+
+    
