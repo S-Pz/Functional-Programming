@@ -48,6 +48,8 @@ main = do
         }
 
     imprimir alunoTeste
+    putStrLn ""
     imprimir livroTeste1
+    putStrLn ""
     imprimir emprestimoTeste
     
