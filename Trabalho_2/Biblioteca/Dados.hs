@@ -1,9 +1,8 @@
 module Biblioteca.Dados where
 
 class Dado d where
-    toString :: d -> String
-    size :: d -> Int
-    imprimir :: Dado d => d -> IO ()
+  imprimir :: d -> IO ()
+  cadastrar :: d -> IO ()
 
 insert :: a -> Int -> Set a -> Set a          -- Insere um item na lista
 --remove :: a -> Set a -> Set a                    -- Remove um item na lista
