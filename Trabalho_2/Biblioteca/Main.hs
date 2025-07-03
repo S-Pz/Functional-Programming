@@ -52,4 +52,6 @@ main = do
     imprimir livroTeste1
     putStrLn ""
     imprimir emprestimoTeste
-    
+    putStrLn ""
+    putStrLn ""
+    cadastrar (Aluno 102 "Luiz Souza" "luiz.souza@provedor.com")
