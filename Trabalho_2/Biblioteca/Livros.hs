@@ -1,6 +1,7 @@
 module Biblioteca.Livros where 
-    import Biblioteca.Dados
     import System.IO
+
+    import Biblioteca.Dados
     data Livro = Livro {
         registro:: Int,
         titulo:: String,
@@ -14,7 +15,7 @@ module Biblioteca.Livros where
             putStrLn ("Edição: " ++ show edicao)
         
         cadastrar (Livro reg titulo edicao) = do
-            handle <- openFile "livros.txt" AppendMode
+            
             putStrLn "=========================================="
             putStrLn "           CADASTRO DE LIVRO"
             putStrLn "------------------------------------------"
@@ -31,6 +32,7 @@ module Biblioteca.Livros where
             edicaoStr <- getLine
             let edicaoLivro = read edicaoStr :: Int
 
+            handle <- openFile "livros.txt" AppendMode
             hPutStrLn handle (show registroLivro ++ ", " ++ tituloLivro ++ ", " ++ show edicaoLivro)
             hClose handle
 

@@ -1,9 +1,10 @@
 module Biblioteca.Emprestimo where
+    import System.IO
+    
     import Biblioteca.Alunos
     import Biblioteca.Livros
     import Biblioteca.Util
     import Biblioteca.Dados
-    import System.IO
     data Emprestimo = Emprestimo {
         numero:: Int,
         aluno:: Aluno,
@@ -36,7 +37,6 @@ module Biblioteca.Emprestimo where
             putStrLn "========================================="
         
         cadastrar (Emprestimo num aluno dataEmp dataDev livros) = do 
-            handle <- openFile "emprestimos.txt" AppendMode
             putStrLn "=========================================="
             putStrLn "         CADASTRO DE EMPRÉSTIMO"
             putStrLn "------------------------------------------"
@@ -54,6 +54,7 @@ module Biblioteca.Emprestimo where
             putStrLn "Digite a data de devolução (ex: DD/MM/AAAA):"
             dataDev <- getLine
 
+            handle <- openFile "emprestimos.txt" AppendMode
             putStrLn "Adicionar Livros"
             listaRegistros <- adicionaEmprestimos
             putStrLn "Adicionar Livros"
