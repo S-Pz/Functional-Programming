@@ -1,7 +1,9 @@
 module Biblioteca.Livros where 
+    
     import System.IO
 
     import Biblioteca.Dados
+    
     data Livro = Livro {
         registro:: Int,
         titulo:: String,
@@ -37,3 +39,22 @@ module Biblioteca.Livros where
             hClose handle
 
             putStrLn "\nLivro cadastrado com sucesso!"
+
+        obter = do
+            conteudo <- readFile "livros.txt"
+            let linhas = lines conteudo
+            return (criaSetLivros linhas)
+    
+    criaSetLivros :: [String] -> Set Livro
+    criaSetLivros [] = SetVazio
+    criaSetLivros (l:ls) = St livro (criaSetLivros ls)
+        where
+            partes = splitPorVirgula l
+            livro = Livro (read (head partes)) (partes !! 1) (read (partes !! 2) :: Int)
+    
+    splitPorVirgula :: String -> [String]
+    splitPorVirgula [] = [""]
+    splitPorVirgula (c:cs)
+        | c == ','  = "" : resto
+        | otherwise = (c : head resto) : tail resto
+        where resto = splitPorVirgula cs
