@@ -1,40 +1,41 @@
 module Biblioteca.Dados where
 
-class Dado d where
+class (Show d, Eq d) => Dado d where
   imprimir :: d -> IO ()
   cadastrar :: d -> IO ()
-  --buscar :: Eq t => t -> d -> Maybe t
 
+data Set t = Set [t] deriving (Show, Eq)
 
-data Set t = EmptySet | St t (Set t) deriving (Show)
+instance Dado Int
+instance Dado String
 
-instance (Show t, Eq t) => Dado (Set t) where
-  imprimir s = putStrLn $ impr s
+--instance (Show t, Eq t) => Dado (Set t) where
+  --imprimir s = putStrLn $ impr s
   --buscar = search
 
-impr :: Show t => Set t -> String
-impr (EmptySet) = ""
-impr (St x EmptySet) = show x
-impr (St x ls) = show x ++ "," ++ impr ls
+-- impr :: Show t => Set t -> String
+-- impr (EmptySet) = ""
+-- impr (St x EmptySet) = show x
+-- impr (St x ls) = show x ++ "," ++ impr ls
 
-insert :: Eq a => a -> Int -> Set a -> Set a          -- Insere um item na lista
-insert x 0 (EmptySet) = St x EmptySet
-insert _ _ (EmptySet) = error "Posição inválida"
-insert x i (St y ls)
-  | search x (St y ls) == Nothing = St y (insert x (i-1) ls)
-  | otherwise = error "Item já existe"
-  
-remove :: Int -> Set a -> Set a                    -- Remove um item na lista
-remove _ (EmptySet) = error "Lista Vazia"
-remove 0 (St _ ls) = ls
-remove x (St y ls) = St y (remove (x-1) ls)
+vazio :: Set a
+vazio = Set []
 
-search :: Eq a => a -> Set a -> Maybe a
-search _ EmptySet = Nothing
-search x (St y ls)
-  | x == y    = Just y
-  | otherwise = search x ls
+remover :: Dado a => a -> Set a -> Set a
+remover x (Set xs) = Set (filter (/= x) xs)
 
-setEmpty :: Set a -> Bool                        -- Verifica se a fila está vazia
-setEmpty EmptySet = True
-setEmpty _ = False
+inserir :: Dado a => a -> Set a -> Set a
+inserir x (Set xs)
+  | buscar x (Set xs) = Set xs  -- já está presente, não insere
+  | otherwise   = Set (x : xs)
+
+buscar :: Dado a => a -> Set a -> Bool
+buscar _ (Set []) = False
+buscar x (Set (h:xs))
+  | x == h = True
+  | otherwise = buscar x (Set xs)
+
+
+estaVazio :: Set a -> Bool
+estaVazio (Set[]) = True
+estaVazio _ = False
