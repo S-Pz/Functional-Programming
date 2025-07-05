@@ -1,8 +1,13 @@
 module Biblioteca.Dados where
 
-class (Show d, Eq d) => Dado d where
-  imprimir :: d -> IO ()
-  cadastrar :: d -> IO ()
+  import System.IO
+  import Data.Maybe (isNothing)
+  
+  class Dado d where
+    imprimir :: d -> IO ()
+    cadastrar :: d -> IO ()
+    obter :: IO (Set d)
+    --buscar :: Eq t => t -> d -> Maybe t
 
 data Set t = Set [t] deriving (Show, Eq)
 
