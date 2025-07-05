@@ -42,10 +42,15 @@ module Biblioteca.Alunos where
             conteudo <- readFile "alunos.txt"
             let linhas = lines conteudo
             return (criaSetAlunos linhas)
+        
+        buscar cod (Set []) = Nothing
+        buscar cod (Set(a:as)) 
+            | codigo a == cod = Just a
+            | otherwise = buscar cod (Set as)
     
     criaSetAlunos :: [String] -> Set Aluno
-    criaSetAlunos [] = SetVazio
-    criaSetAlunos (l:ls) = St aluno (criaSetAlunos ls)
+    criaSetAlunos [] = Set []
+    criaSetAlunos (l:ls) = inserir aluno (criaSetAlunos ls)
         where
             partes = splitPorVirgula l
             aluno = Aluno (read (head partes)) (partes !! 1) (partes !! 2)
