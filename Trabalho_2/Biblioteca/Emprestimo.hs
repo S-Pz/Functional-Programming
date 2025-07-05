@@ -6,6 +6,7 @@ module Biblioteca.Emprestimo where
     import Biblioteca.Livros
     import Biblioteca.Util
     import Biblioteca.Dados
+    import Data.Proxy
     
     data Emprestimo = Emprestimo {
         numero:: Int,
@@ -78,6 +79,55 @@ module Biblioteca.Emprestimo where
         buscar num (Set (e:es))
             | numero e == num = Just e
             | otherwise = buscar num (Set es) 
+
+        showMenu _ = do
+            putStrLn "=========================================="
+            putStrLn "           MENU DE EMPRESTIMOS"
+            putStrLn "------------------------------------------"
+            putStrLn "Cadastrar"
+            putStrLn "Vizualizar"
+            putStrLn "Apagar"
+            putStrLn "Voltar"
+            putStrLn "=========================================="
+            putStrLn "Escolha uma opção: "
+            opcao <- getLine
+            case opcao of
+                "cadastrar" -> do
+                    putStrLn "Você escolheu Cadastrar Emprestimo."
+                    cadastrar (Emprestimo 0 (Aluno 0 "" "") (Data 1 1 2000) (Data 1 1 2000) [])
+                    showMenu (Proxy :: Proxy Emprestimo)
+                    return "Cadastrar"
+                "vizualizar" -> do
+                    putStrLn "Você escolheu Vizualizar Emprestimos."
+                    setAlunosAtualizado <- obter :: IO (Set Aluno)
+                    setLivrosAtualizado <- obter :: IO (Set Livro)
+                    setEmprestimos <- obter :: IO (Set Emprestimo)
+                    print setEmprestimos
+                    showMenu (Proxy :: Proxy Emprestimo)
+                    return "Vizualizar"
+                "apagar" -> do
+                    putStrLn "Você escolheu Apagar Emprestimo."
+              {-      putStrLn "Digite o código do aluno a ser apagado:"
+                    codStr <- getLine
+                    let cod = read codStr :: Int
+                    let setAlunos = obter :: IO (Set Aluno)
+                    let aluno = buscar cod setAlunos
+                    case aluno of
+                        Just a -> do
+                            let novoSet = remover a setAlunos
+                            -- Aqui você deve salvar o novoSet no arquivo, se necessário.
+                            putStrLn $ "Aluno com código " ++ show cod ++ " removido."
+                        Nothing -> putStrLn $ "Aluno com código " ++ show cod ++ " não encontrado."
+                    showMenu (Proxy :: Proxy Aluno)
+            -}      return "Apagar"
+                "voltar" -> do
+                    putStrLn "Voltando ao menu principal..."
+                    return "Voltar"
+                _ -> do
+                    putStrLn "Opção inválida. Tente novamente."
+                    showMenu (Proxy :: Proxy Emprestimo)
+                    return "Invalido"
+            return opcao
     
     criaSetEmprestimos :: [String] -> Set Aluno -> Set Livro -> Set Emprestimo
     criaSetEmprestimos [] _ _ = Set []

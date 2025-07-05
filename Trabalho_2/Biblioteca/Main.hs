@@ -6,6 +6,7 @@ import Biblioteca.Dados
 import Biblioteca.Emprestimo
 import Biblioteca.Livros
 import Biblioteca.Util
+import Data.Proxy
 
 import Data.Maybe (isJust, fromJust)
 
@@ -20,7 +21,9 @@ imprimirBusca resultado =
 
 main :: IO()
 main = do
+    showMainMenu
     -- #######  Testando as funções do Set ########
+{-
     putStrLn "========================================"
     putStrLn "      INÍCIO: TESTANDO O MÓDULO SET"
     putStrLn "----------------------------------------"
@@ -43,16 +46,19 @@ main = do
     putStrLn "----------------------------------------"
     putStrLn "        FIM: TESTANDO O MÓDULO SET"
     putStrLn "========================================\n"
+-}
 
 
     -- ####### Testando cadastrar, obter e buscar para cada tipo de Dado ########
+{-
     putStrLn "========================================"
     putStrLn "   TESTANDO CADASTRO, OBTENÇÃO E BUSCA"
     putStrLn "----------------------------------------"
     putStrLn "NOTA: Os cadastros salvam os dados em arquivos (alunos.txt, etc)."
     putStrLn "As funções de obter e buscar leem desses arquivos.\n"
-
+-}
     -- --- Teste de Aluno ---
+{-
     putStrLn "--- INÍCIO: TESTE DE ALUNO ---"
     putStrLn "\n(A) Testando 'cadastrar Aluno':"
     putStrLn "Por favor, insira os dados de um novo aluno quando solicitado."
@@ -71,9 +77,10 @@ main = do
     let resultadoAluno = buscar codAluno setAlunos
     imprimirBusca resultadoAluno
     putStrLn "--- FIM: TESTE DE ALUNO ---\n"
-
+-}
 
     -- --- Teste de Livro ---
+{-
     putStrLn "--- INÍCIO: TESTE DE LIVRO ---"
     putStrLn "\n(A) Testando 'cadastrar Livro':"
     putStrLn "Por favor, insira os dados de um novo livro quando solicitado."
@@ -92,9 +99,10 @@ main = do
     let resultadoLivro = buscar regLivro setLivros
     imprimirBusca resultadoLivro
     putStrLn "--- FIM: TESTE DE LIVRO ---\n"
-
+-}
 
     -- --- Teste de Emprestimo ---
+{-    
     putStrLn "--- INÍCIO: TESTE DE EMPRÉSTIMO ---"
     putStrLn "\n(A) Testando 'cadastrar Emprestimo':"
     putStrLn "Por favor, insira os dados de um novo empréstimo."
@@ -117,3 +125,53 @@ main = do
     let resultadoEmprestimo = buscar numEmp setEmprestimos
     imprimirBusca resultadoEmprestimo
     putStrLn "--- FIM: TESTE DE EMPRÉSTIMO ---\n"
+-}
+
+    -- ####### Testando o menu interativo para Aluno ########
+{-    
+    opcao <- showMenu (Proxy :: Proxy Aluno)
+    putStrLn $ "Você digitou: " ++ opcao
+-}
+
+{-
+    -- ####### Testando o menu interativo para Emprestimo ########
+    opcao <- showMenu (Proxy :: Proxy Emprestimo)
+    putStrLn $ "Você digitou: " ++ opcao
+-}
+
+{-
+    -- ####### Testando o menu interativo para Livro ########
+    opcao <- showMenu (Proxy :: Proxy Livro)
+    putStrLn $ "Você digitou: " ++ opcao
+-}
+
+showMainMenu :: IO ()
+showMainMenu = do
+    putStrLn "=========================================="
+    putStrLn "           MENU PRINCIPAL"
+    putStrLn "------------------------------------------"
+    putStrLn "SELECIONE O MENU DESEJADO:"
+    putStrLn "ALUNOS"
+    putStrLn "LIVROS"
+    putStrLn "EMPRÉSTIMOS"
+    putStrLn "FECHAR"
+    putStrLn "=========================================="
+    opcao <- getLine
+    case opcao of
+        "ALUNOS" -> do
+            resultado <- showMenu (Proxy :: Proxy Aluno)
+            putStrLn ""
+        "LIVROS" -> do
+            resultado <- showMenu (Proxy :: Proxy Livro)
+            putStrLn ""
+        "EMPRÉSTIMOS" -> do
+            resultado <- showMenu (Proxy :: Proxy Emprestimo)
+            putStrLn ""
+        "FECHAR" -> do
+            putStrLn "Encerrando sistema..."
+        _ -> do
+            putStrLn "Opção inválida. Tente novamente."
+            showMainMenu
+    if opcao /= "FECHAR" 
+        then showMainMenu
+        else putStrLn "Obrigado por utilzar nosso sistema"

@@ -1,7 +1,7 @@
 module Biblioteca.Alunos where 
     
     import System.IO
-    
+    import Data.Proxy
     import Biblioteca.Dados 
     
     data Aluno = Aluno {
@@ -47,6 +47,54 @@ module Biblioteca.Alunos where
         buscar cod (Set(a:as)) 
             | codigo a == cod = Just a
             | otherwise = buscar cod (Set as)
+
+        showMenu _ = do
+            putStrLn "=========================================="
+            putStrLn "           MENU DE ALUNOS"
+            putStrLn "------------------------------------------"
+            putStrLn "Cadastrar"
+            putStrLn "Vizualizar"
+            putStrLn "Apagar"
+            putStrLn "Voltar"
+            putStrLn "=========================================="
+            putStrLn "Escolha uma opção: "
+            opcao <- getLine
+            case opcao of
+                "cadastrar" -> do
+                    putStrLn "Você escolheu Cadastrar Aluno."
+                    cadastrar (Aluno 0 "" "")
+                    showMenu (Proxy :: Proxy Aluno)
+                    return "Cadastrar"
+                "vizualizar" -> do
+                    putStrLn "Você escolheu Vizualizar Alunos."
+                    setAlunos <- obter :: IO (Set Aluno)
+                    print setAlunos
+                    showMenu (Proxy :: Proxy Aluno)
+                    return "Vizualizar"
+                "apagar" -> do
+                    putStrLn "Você escolheu Apagar Aluno."
+              {-      putStrLn "Digite o código do aluno a ser apagado:"
+                    codStr <- getLine
+                    let cod = read codStr :: Int
+                    let setAlunos = obter :: IO (Set Aluno)
+                    let aluno = buscar cod setAlunos
+                    case aluno of
+                        Just a -> do
+                            let novoSet = remover a setAlunos
+                            -- Aqui você deve salvar o novoSet no arquivo, se necessário.
+                            putStrLn $ "Aluno com código " ++ show cod ++ " removido."
+                        Nothing -> putStrLn $ "Aluno com código " ++ show cod ++ " não encontrado."
+                    showMenu (Proxy :: Proxy Aluno)
+            -}      return "Apagar"
+                "voltar" -> do
+                    putStrLn "Voltando ao menu principal..."
+                    return "Voltar"
+                _ -> do
+                    putStrLn "Opção inválida. Tente novamente."
+                    showMenu (Proxy :: Proxy Aluno)
+                    return "Invalido"
+            return opcao
+        
     
     criaSetAlunos :: [String] -> Set Aluno
     criaSetAlunos [] = Set []
