@@ -2,12 +2,14 @@ module Biblioteca.Dados where
 
   import System.IO
   import Data.Maybe (isNothing)
+  import Data.Proxy
   
   class Dado d where
     imprimir :: d -> IO ()
     cadastrar :: d -> IO ()
     obter :: IO (Set d)
     buscar :: Int -> Set d -> Maybe d
+    showMenu :: Proxy d -> IO String
 
   data Set t = Set [t] deriving (Show, Eq)
 
