@@ -47,11 +47,30 @@ main = do
             livros = [livroTeste1, livroTeste2]
         }
 
-    imprimir alunoTeste
-    putStrLn ""
-    imprimir livroTeste1
-    putStrLn ""
-    imprimir emprestimoTeste
-    putStrLn ""
-    putStrLn ""
-    cadastrar (Aluno 102 "Luiz Souza" "luiz.souza@provedor.com")
+    -- imprimir alunoTeste
+    -- putStrLn ""
+    -- imprimir livroTeste1
+    -- putStrLn ""
+    -- imprimir emprestimoTeste
+    -- putStrLn ""
+    -- putStrLn ""
+    -- cadastrar (Aluno 102 "Luiz Souza" "luiz.souza@provedor.com")
+
+
+    -- #######  Testando o Set Dado ########
+    let s0 = vazio :: Set Int
+    print $ estaVazio s0
+
+    let s1 = inserir 10 s0
+    let s2 = inserir 20 s1
+    let s3 = inserir 10 s2 -- duplicado, não será inserido
+    print s3
+
+    print $ buscar 20 s3
+    print $ buscar 30 s3
+
+    let s4 = remover 10 s3
+    print s4
+    print $ estaVazio s4
+
+    -- ############ FIM DO TESTE ##########
