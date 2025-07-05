@@ -44,10 +44,15 @@ module Biblioteca.Livros where
             conteudo <- readFile "livros.txt"
             let linhas = lines conteudo
             return (criaSetLivros linhas)
+        
+        buscar reg (Set []) = Nothing
+        buscar reg (Set(a:as)) 
+            | registro a == reg = Just a
+            | otherwise = buscar reg (Set as)
     
     criaSetLivros :: [String] -> Set Livro
-    criaSetLivros [] = SetVazio
-    criaSetLivros (l:ls) = St livro (criaSetLivros ls)
+    criaSetLivros [] = Set []
+    criaSetLivros (l:ls) = inserir livro (criaSetLivros ls)
         where
             partes = splitPorVirgula l
             livro = Livro (read (head partes)) (partes !! 1) (read (partes !! 2) :: Int)

@@ -1,5 +1,6 @@
 module Biblioteca.Emprestimo where
     import System.IO
+    import Data.Maybe (fromJust)
     
     import Biblioteca.Alunos
     import Biblioteca.Livros
@@ -43,7 +44,7 @@ module Biblioteca.Emprestimo where
             putStrLn "------------------------------------------"
 
             putStrLn "Digite o número do empréstimo:"
-            num<- getLine
+            num <- getLine
             let numEmp = read num :: Int
 
             putStrLn "Digite o código do aluno:"
@@ -55,53 +56,53 @@ module Biblioteca.Emprestimo where
             putStrLn "Digite a data de devolução (ex: DD/MM/AAAA):"
             dataDev <- getLine
 
-            handle <- openFile "emprestimos.txt" AppendMode
             putStrLn "Adicionar Livros"
             listaRegistros <- adicionaEmprestimos
-            putStrLn "Adicionar Livros"
+            
+            let linhaEmprestimo = num ++ "," ++ codAlunoStr ++ "," ++ dataEmp ++ "," ++ dataDev ++ "," ++ joinPor ';' listaRegistros
         
+            handle <- openFile "emprestimos.txt" AppendMode
+            hPutStrLn handle linhaEmprestimo
+            hClose handle
+
         obter = do
-            setAlunos <- Biblioteca.Alunos.obter
-            setLivros <- Biblioteca.Livros.obter
+
+            setAlunos <- obter :: IO (Set Aluno)
+            setLivros <- obter :: IO (Set Livro)
         
             conteudo <- readFile "emprestimos.txt"
             let linhas = lines conteudo
             return (criaSetEmprestimos linhas setAlunos setLivros)
-            
+        
+        buscar num (Set []) = Nothing
+        buscar num (Set (e:es))
+            | numero e == num = Just e
+            | otherwise = buscar num (Set es) 
+    
     criaSetEmprestimos :: [String] -> Set Aluno -> Set Livro -> Set Emprestimo
-    criaSetEmprestimos [] _ _ = EmptySet
-    criaSetEmprestimos (linha:resto) alunosSet livrosSet = St emp (criaSetEmprestimos resto alunosSet livrosSet)
+    criaSetEmprestimos [] _ _ = Set []
+    criaSetEmprestimos (linha:resto) alunosSet livrosSet =
+        case (alunoEncontrado, livrosEmprestados) of
+            (Just alunoVal, livrosVal) ->
+                inserir (Emprestimo num alunoVal dataEmp dataDev livrosVal) (criaSetEmprestimos resto alunosSet livrosSet)
+            _ -> criaSetEmprestimos resto alunosSet livrosSet  
         where
             partes = splitPor ',' linha
-            num = read (head partes) :: Int
+            num = read (partes !! 0) :: Int
             codAluno = read (partes !! 1) :: Int
             dataEmp = parseData (partes !! 2)
             dataDev = parseData (partes !! 3)
             codLivros = splitPor ';' (partes !! 4)
-            
-            alunoEncontrado = fromJust (buscaAluno codAluno alunosSet)
+
+            alunoEncontrado = buscar codAluno alunosSet
             livrosEmprestados = buscaLivros codLivros livrosSet
-            
-            emp = Emprestimo num alunoEncontrado dataEmp dataDev livrosEmprestados
-    
-    buscaAluno :: Int -> Set Aluno -> Maybe Aluno
-    buscaAluno _ EmptySet = Nothing
-    buscaAluno cod (St a resto)
-        | codigo a == cod = Just a
-        | otherwise       = buscaAluno cod resto
 
     buscaLivros :: [String] -> Set Livro -> [Livro]
     buscaLivros [] _ = []
     buscaLivros (regStr:rs) set =
-        case buscaLivro (read regStr) set of
+        case buscar (read regStr) set of 
             Just l  -> l : buscaLivros rs set
             Nothing -> buscaLivros rs set 
-
-    buscaLivro :: Int -> Set Livro -> Maybe Livro
-    buscaLivro _ EmptySet = Nothing
-    buscaLivro reg (St l resto)
-        | registro l == reg = Just l
-        | otherwise         = buscaLivro reg resto
 
     parseData :: String -> Data
     parseData str = Data (read d) (read m) (read a)
@@ -115,3 +116,8 @@ module Biblioteca.Emprestimo where
         | otherwise        = (c : head resto) : tail resto
             where
                 resto = splitPor delimitador cs
+
+    joinPor :: Char -> [String] -> String
+    joinPor _ [] = ""
+    joinPor _ [x] = x
+    joinPor sep (x:xs) = x ++ [sep] ++ joinPor sep xs
