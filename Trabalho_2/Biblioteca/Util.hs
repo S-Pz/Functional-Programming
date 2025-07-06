@@ -31,3 +31,29 @@ module Biblioteca.Util where
     formata [] [] = []
     formata chave valor = alinhaEsq chave '.' 30 ++ ":" ++ alinhaDir valor ' ' 50
     
+    -- Divide uma string em uma lista de strings com base em um caractere delimitador.
+    splitPor :: Char -> String -> [String]
+    splitPor _ [] = [""]
+    splitPor delimitador (c:cs)
+        | c == delimitador = "" : resto
+        | otherwise        = (c : head resto) : tail resto
+            where
+                resto = splitPor delimitador cs
+
+    -- Retorna o elemento em uma posição específica de uma lista.
+    elementoNaPosicao :: Int -> [String] -> String
+    elementoNaPosicao 0 (x:_)  = x
+    elementoNaPosicao n (_:xs) = elementoNaPosicao (n - 1) xs
+    elementoNaPosicao _ []     = error "Índice fora da faixa"
+
+    -- Extrai um campo específico de uma string que é dividida por um delimitador.
+    extrairCampo :: Char -> Int -> String -> String
+    extrairCampo delimitador n linha =
+        let partes = splitPor delimitador linha
+        in elementoNaPosicao n partes
+
+    -- Une uma lista de strings em uma única string, separadas por um caractere.
+    joinPor :: Char -> [String] -> String
+    joinPor _ [] = ""
+    joinPor _ [x] = x
+    joinPor sep (x:xs) = x ++ [sep] ++ joinPor sep xs

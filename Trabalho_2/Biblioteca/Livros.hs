@@ -2,7 +2,9 @@ module Biblioteca.Livros where
     
     import System.IO
     import Data.Proxy
+    
     import Biblioteca.Dados
+    import Biblioteca.Util
     
     data Livro = Livro {
         registro:: Int,
@@ -49,47 +51,61 @@ module Biblioteca.Livros where
         buscar reg (Set(a:as)) 
             | registro a == reg = Just a
             | otherwise = buscar reg (Set as)
+        
+        apagar _ reg = do
+            emprestimoConteudo <- readFile "emprestimos.txt"
+            
+            let emprestimos  = lines emprestimoConteudo
+            let temPendencia = any (\linha -> show reg `elem` (splitPor ';'(extrairCampo ',' 4 linha))) emprestimos
 
+            if temPendencia then
+                putStrLn "Este livro não pode ser apagado, pois está emprestado."
+            else do
+                setLivros <- obter :: IO (Set Livro)
+                let novoSet = buscar reg setLivros
+
+                case novoSet of 
+                    Nothing -> putStrLn "Livro com o registro informado não foi encontrado."
+                    Just l -> do
+                        let novoSet = remover l setLivros
+                        let conteudoParaSalvar = setParaString novoSet
+                        writeFile "livros.txt" conteudoParaSalvar
+                        putStrLn "Livro apagado com sucesso!"
         showMenu _ = do
+            let dummyLivro = Livro 0 "" 0
+
             putStrLn "=========================================="
             putStrLn "           MENU DE LIVROS"
             putStrLn "------------------------------------------"
             putStrLn "Cadastrar"
-            putStrLn "Vizualizar"
+            putStrLn "Visualizar"
             putStrLn "Apagar"
             putStrLn "Voltar"
             putStrLn "=========================================="
             putStrLn "Escolha uma opção: "
             opcao <- getLine
+            
             case opcao of
-                "cadastrar" -> do
+                "Cadastrar" -> do
                     putStrLn "Você escolheu Cadastrar Livro."
                     cadastrar (Livro 0 "" 0)
                     showMenu (Proxy :: Proxy Livro)
                     return "Cadastrar"
-                "vizualizar" -> do
+                "Visualizar" -> do
                     putStrLn "Você escolheu Vizualizar Livros."
                     setLivros <- obter :: IO (Set Livro)
                     print setLivros
                     showMenu (Proxy :: Proxy Livro)
                     return "Vizualizar"
-                "apagar" -> do
+                "Apagar" -> do
                     putStrLn "Você escolheu Apagar Livro."
-              {-      putStrLn "Digite o código do aluno a ser apagado:"
-                    codStr <- getLine
-                    let cod = read codStr :: Int
-                    let setAlunos = obter :: IO (Set Aluno)
-                    let aluno = buscar cod setAlunos
-                    case aluno of
-                        Just a -> do
-                            let novoSet = remover a setAlunos
-                            -- Aqui você deve salvar o novoSet no arquivo, se necessário.
-                            putStrLn $ "Aluno com código " ++ show cod ++ " removido."
-                        Nothing -> putStrLn $ "Aluno com código " ++ show cod ++ " não encontrado."
-              -}
+                    putStrLn "Digite o registro do livro a ser apagado:"
+                    regStr <- getLine
+                    let reg = read regStr :: Int
+                    apagar dummyLivro reg
                     showMenu (Proxy :: Proxy Livro)
                     return "Apagar"
-                "voltar" -> do
+                "Voltar" -> do
                     putStrLn "Voltando ao menu principal..."
                     return "Voltar"
                 _ -> do
@@ -102,12 +118,11 @@ module Biblioteca.Livros where
     criaSetLivros [] = Set []
     criaSetLivros (l:ls) = inserir livro (criaSetLivros ls)
         where
-            partes = splitPorVirgula l
+            partes = splitPor ',' l
             livro = Livro (read (head partes)) (partes !! 1) (read (partes !! 2) :: Int)
-    
-    splitPorVirgula :: String -> [String]
-    splitPorVirgula [] = [""]
-    splitPorVirgula (c:cs)
-        | c == ','  = "" : resto
-        | otherwise = (c : head resto) : tail resto
-        where resto = splitPorVirgula cs
+
+    livroParaLinha :: Livro -> String
+    livroParaLinha (Livro reg titulo edicao) = show reg ++ ", " ++ titulo ++ ", " ++ show edicao
+
+    setParaString :: Set Livro -> String
+    setParaString (Set livros) = unlines (map livroParaLinha livros)

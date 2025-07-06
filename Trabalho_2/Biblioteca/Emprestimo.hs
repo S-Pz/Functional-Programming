@@ -1,12 +1,12 @@
 module Biblioteca.Emprestimo where
     import System.IO
+    import Data.Proxy
     import Data.Maybe (fromJust)
     
     import Biblioteca.Alunos
     import Biblioteca.Livros
-    import Biblioteca.Util
     import Biblioteca.Dados
-    import Data.Proxy
+    import Biblioteca.Util
     
     data Emprestimo = Emprestimo {
         numero:: Int,
@@ -79,25 +79,41 @@ module Biblioteca.Emprestimo where
         buscar num (Set (e:es))
             | numero e == num = Just e
             | otherwise = buscar num (Set es) 
+        
+        apagar _ num = do
+            conteudo <- readFile "emprestimos.txt"
+            let linhas = lines conteudo
+            
+            let linhasFiltradas = filter (\linha -> extrairCampo ',' 0 linha /= show num) linhas
+
+            if length linhasFiltradas == length linhas
+                then putStrLn "Empréstimo com o número informado não foi encontrado."
+            
+            else do
+                writeFile "emprestimos.txt" (unlines linhasFiltradas)
+                putStrLn "Empréstimo apagado com sucesso!"
 
         showMenu _ = do
+            let dummyEmprestimo = Emprestimo 0 (Aluno 0 "" "") (Data 1 1 2000) (Data 1 1 2000) []
+
             putStrLn "=========================================="
             putStrLn "           MENU DE EMPRESTIMOS"
             putStrLn "------------------------------------------"
             putStrLn "Cadastrar"
-            putStrLn "Vizualizar"
+            putStrLn "Visualizar"
             putStrLn "Apagar"
             putStrLn "Voltar"
             putStrLn "=========================================="
             putStrLn "Escolha uma opção: "
             opcao <- getLine
             case opcao of
-                "cadastrar" -> do
+                
+                "Cadastrar" -> do
                     putStrLn "Você escolheu Cadastrar Emprestimo."
                     cadastrar (Emprestimo 0 (Aluno 0 "" "") (Data 1 1 2000) (Data 1 1 2000) [])
                     showMenu (Proxy :: Proxy Emprestimo)
                     return "Cadastrar"
-                "vizualizar" -> do
+                "Visualizar" -> do
                     putStrLn "Você escolheu Vizualizar Emprestimos."
                     setAlunosAtualizado <- obter :: IO (Set Aluno)
                     setLivrosAtualizado <- obter :: IO (Set Livro)
@@ -105,22 +121,15 @@ module Biblioteca.Emprestimo where
                     print setEmprestimos
                     showMenu (Proxy :: Proxy Emprestimo)
                     return "Vizualizar"
-                "apagar" -> do
+                "Apagar" -> do
                     putStrLn "Você escolheu Apagar Emprestimo."
-              {-      putStrLn "Digite o código do aluno a ser apagado:"
-                    codStr <- getLine
-                    let cod = read codStr :: Int
-                    let setAlunos = obter :: IO (Set Aluno)
-                    let aluno = buscar cod setAlunos
-                    case aluno of
-                        Just a -> do
-                            let novoSet = remover a setAlunos
-                            -- Aqui você deve salvar o novoSet no arquivo, se necessário.
-                            putStrLn $ "Aluno com código " ++ show cod ++ " removido."
-                        Nothing -> putStrLn $ "Aluno com código " ++ show cod ++ " não encontrado."
-                    showMenu (Proxy :: Proxy Aluno)
-            -}      return "Apagar"
-                "voltar" -> do
+                    putStrLn "Digite o número do empréstimo a ser apagado:"
+                    numStr <- getLine
+                    let num = read numStr :: Int
+                    apagar dummyEmprestimo num
+                    showMenu (Proxy :: Proxy Emprestimo)
+                    return "Apagar"
+                "Voltar" -> do
                     putStrLn "Voltando ao menu principal..."
                     return "Voltar"
                 _ -> do
@@ -158,16 +167,3 @@ module Biblioteca.Emprestimo where
     parseData str = Data (read d) (read m) (read a)
         where
             [d, m, a] = splitPor '/' str
-
-    splitPor :: Char -> String -> [String]
-    splitPor _ [] = [""]
-    splitPor delimitador (c:cs)
-        | c == delimitador = "" : resto
-        | otherwise        = (c : head resto) : tail resto
-            where
-                resto = splitPor delimitador cs
-
-    joinPor :: Char -> [String] -> String
-    joinPor _ [] = ""
-    joinPor _ [x] = x
-    joinPor sep (x:xs) = x ++ [sep] ++ joinPor sep xs
