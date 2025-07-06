@@ -153,27 +153,28 @@ showMainMenu = do
     putStrLn "           MENU PRINCIPAL"
     putStrLn "------------------------------------------"
     putStrLn "SELECIONE O MENU DESEJADO:"
-    putStrLn "ALUNOS"
-    putStrLn "LIVROS"
-    putStrLn "EMPRÉSTIMOS"
-    putStrLn "FECHAR"
+    putStrLn "Alunos"
+    putStrLn "Livros"
+    putStrLn "Emprestimo"
+    putStrLn "Sair"
     putStrLn "=========================================="
     opcao <- getLine
+    
     case opcao of
-        "ALUNOS" -> do
+        "Alunos" -> do
             resultado <- showMenu (Proxy :: Proxy Aluno)
             putStrLn ""
-        "LIVROS" -> do
+        "Livros" -> do
             resultado <- showMenu (Proxy :: Proxy Livro)
             putStrLn ""
-        "EMPRÉSTIMOS" -> do
+        "Emprestimo" -> do
             resultado <- showMenu (Proxy :: Proxy Emprestimo)
             putStrLn ""
-        "FECHAR" -> do
+        "Sair" -> do
             putStrLn "Encerrando sistema..."
         _ -> do
             putStrLn "Opção inválida. Tente novamente."
             showMainMenu
-    if opcao /= "FECHAR" 
+    if opcao /= "Sair" 
         then showMainMenu
         else putStrLn "Obrigado por utilzar nosso sistema"
