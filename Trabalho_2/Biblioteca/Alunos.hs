@@ -99,12 +99,12 @@ module Biblioteca.Alunos where
             conteudo <- readFile "alunos.txt"
             c_emprestimos <- readFile "emprestimos.txt"
             let emprestimos = lines c_emprestimos
-                existe_emprestimo = filter (\linha -> extrairCampo 1 linha == codigoAlvo) emprestimos
+                existe_emprestimo = filter (\linha -> extrairCampo 1 linha == show codigoAlvo) emprestimos
             if existe_emprestimo == [] 
                 then
                     do
                         let alunos = lines conteudo
-                            linhasFiltradas = filter (\linha -> extrairCampo 0 linha /= codigoAlvo) alunos
+                            linhasFiltradas = filter (\linha -> extrairCampo 0 linha /= show codigoAlvo) alunos
                         
                         writeFile "alunos.txt" (unlines linhasFiltradas)
                 else putStrLn "Existem Pendencias"

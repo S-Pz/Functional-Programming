@@ -9,7 +9,7 @@ module Biblioteca.Dados where
     cadastrar :: d -> IO ()
     obter :: IO (Set d)
     buscar :: Int -> Set d -> Maybe d
-    apagar :: d -> String -> IO()
+    apagar :: d -> Int -> IO()
     showMenu :: Proxy d -> IO String
 
   data Set t = Set [t] deriving (Show, Eq)
