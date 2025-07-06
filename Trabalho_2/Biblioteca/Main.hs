@@ -21,7 +21,9 @@ imprimirBusca resultado =
 
 main :: IO()
 main = do
-    showMainMenu
+    --showMainMenu
+    apagar (Aluno 0 "" "") "111"
+
     -- #######  Testando as funções do Set ########
 {-
     putStrLn "========================================"
@@ -133,14 +135,14 @@ main = do
     putStrLn $ "Você digitou: " ++ opcao
 -}
 
-{-
     -- ####### Testando o menu interativo para Emprestimo ########
+{-
     opcao <- showMenu (Proxy :: Proxy Emprestimo)
     putStrLn $ "Você digitou: " ++ opcao
 -}
 
-{-
     -- ####### Testando o menu interativo para Livro ########
+{-
     opcao <- showMenu (Proxy :: Proxy Livro)
     putStrLn $ "Você digitou: " ++ opcao
 -}

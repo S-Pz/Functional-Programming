@@ -95,6 +95,31 @@ module Biblioteca.Alunos where
                     return "Invalido"
             return opcao
         
+        apagar _ codigoAlvo = do
+            conteudo <- readFile "alunos.txt"
+            c_emprestimos <- readFile "emprestimos.txt"
+            let emprestimos = lines c_emprestimos
+                existe_emprestimo = filter (\linha -> extrairCampo 1 linha == codigoAlvo) emprestimos
+            if existe_emprestimo == [] 
+                then
+                    do
+                        let alunos = lines conteudo
+                            linhasFiltradas = filter (\linha -> extrairCampo 0 linha /= codigoAlvo) alunos
+                        
+                        writeFile "alunos.txt" (unlines linhasFiltradas)
+                else putStrLn "Existem Pendencias"
+                
+                    
+
+    extrairCampo :: Int -> String -> String
+    extrairCampo n linha =
+        let partes = splitPorVirgula linha
+        in (elementoNaPosicao n partes)
+
+    elementoNaPosicao :: Int -> [String] -> String
+    elementoNaPosicao 0 (x:_)  = x
+    elementoNaPosicao n (_:xs) = elementoNaPosicao (n - 1) xs
+    elementoNaPosicao _ []     = error "Índice fora da faixa"
     
     criaSetAlunos :: [String] -> Set Aluno
     criaSetAlunos [] = Set []
@@ -105,9 +130,7 @@ module Biblioteca.Alunos where
     
     splitPorVirgula :: String -> [String]
     splitPorVirgula [] = [""]
-    splitPorVirgula (c:cs)
-        | c == ','  = "" : resto
-        | otherwise = (c : head resto) : tail resto
-        
-        where
-            resto = splitPorVirgula cs
+    splitPorVirgula (',' : xs) = "" : splitPorVirgula xs
+    splitPorVirgula (x : xs) =
+        let (y : ys) = splitPorVirgula xs
+        in (x : y) : ys
