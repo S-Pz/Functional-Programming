@@ -47,8 +47,30 @@ module Biblioteca.Alunos where
         buscar cod (Set(a:as)) 
             | codigo a == cod = Just a
             | otherwise = buscar cod (Set as)
+        
+        apagar _ cod = do
+            empretimoConteudo <- readFile "emprestimos.txt"
+            let emprestimos = lines empretimoConteudo
+
+            let temPendencia = any (\linha -> extrairCampo 1 linha == show cod) emprestimos
+
+            if temPendencia then
+                putStrLn "\n[!] - Este aluno não pode ser apagado, pois possui um empréstimo"
+            else do
+                setAlunos <- obter :: IO (Set Aluno)
+                let aluno = buscar cod setAlunos
+                case aluno of
+                    Nothing -> putStrLn "Aluno não encontrado."
+                    Just a -> do
+                        let novoSet = remover a setAlunos
+                        let conteudoParaSalvar = setParaString novoSet
+                        writeFile "alunos.txt" conteudoParaSalvar
+                        putStrLn "Aluno apagado com sucesso!"
+
 
         showMenu _ = do
+            let dummyAluno = Aluno 0 "" ""
+
             putStrLn "=========================================="
             putStrLn "           MENU DE ALUNOS"
             putStrLn "------------------------------------------"
@@ -73,19 +95,12 @@ module Biblioteca.Alunos where
                     return "Vizualizar"
                 "apagar" -> do
                     putStrLn "Você escolheu Apagar Aluno."
-              {-      putStrLn "Digite o código do aluno a ser apagado:"
+                    putStrLn "Digite o código do aluno a ser apagado:"
                     codStr <- getLine
                     let cod = read codStr :: Int
-                    let setAlunos = obter :: IO (Set Aluno)
-                    let aluno = buscar cod setAlunos
-                    case aluno of
-                        Just a -> do
-                            let novoSet = remover a setAlunos
-                            -- Aqui você deve salvar o novoSet no arquivo, se necessário.
-                            putStrLn $ "Aluno com código " ++ show cod ++ " removido."
-                        Nothing -> putStrLn $ "Aluno com código " ++ show cod ++ " não encontrado."
+                    apagar dummyAluno cod
                     showMenu (Proxy :: Proxy Aluno)
-            -}      return "Apagar"
+                    return "Apagar"
                 "voltar" -> do
                     putStrLn "Voltando ao menu principal..."
                     return "Voltar"
@@ -94,23 +109,7 @@ module Biblioteca.Alunos where
                     showMenu (Proxy :: Proxy Aluno)
                     return "Invalido"
             return opcao
-        
-        apagar _ codigoAlvo = do
-            conteudo <- readFile "alunos.txt"
-            c_emprestimos <- readFile "emprestimos.txt"
-            let emprestimos = lines c_emprestimos
-                existe_emprestimo = filter (\linha -> extrairCampo 1 linha == show codigoAlvo) emprestimos
-            if existe_emprestimo == [] 
-                then
-                    do
-                        let alunos = lines conteudo
-                            linhasFiltradas = filter (\linha -> extrairCampo 0 linha /= show codigoAlvo) alunos
-                        
-                        writeFile "alunos.txt" (unlines linhasFiltradas)
-                else putStrLn "Existem Pendencias"
-                
                     
-
     extrairCampo :: Int -> String -> String
     extrairCampo n linha =
         let partes = splitPorVirgula linha
@@ -134,3 +133,9 @@ module Biblioteca.Alunos where
     splitPorVirgula (x : xs) =
         let (y : ys) = splitPorVirgula xs
         in (x : y) : ys
+
+    alunoParaLinha :: Aluno -> String
+    alunoParaLinha (Aluno cod nome email) = show cod ++ ", " ++ nome ++ ", " ++ email
+
+    setParaString :: Set Aluno -> String
+    setParaString (Set alunos) = unlines (map alunoParaLinha alunos)

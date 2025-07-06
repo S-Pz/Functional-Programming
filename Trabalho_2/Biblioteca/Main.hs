@@ -21,8 +21,8 @@ imprimirBusca resultado =
 
 main :: IO()
 main = do
-    --showMainMenu
-    apagar (Aluno 0 "" "") 111
+    showMainMenu
+    --apagar (Aluno 0 "" "") 111
 
     -- #######  Testando as funções do Set ########
 {-
