@@ -94,7 +94,7 @@ module Biblioteca.Alunos where
                     setAlunos <- obter :: IO (Set Aluno)
                     print setAlunos
                     showMenu (Proxy :: Proxy Aluno)
-                    return "Vizualizar"
+                    return "Visualizar"
                 "Apagar" -> do
                     putStrLn "Você escolheu Apagar Aluno."
                     putStrLn "Digite o código do aluno a ser apagado:"
@@ -114,10 +114,11 @@ module Biblioteca.Alunos where
                 
     criaSetAlunos :: [String] -> Set Aluno
     criaSetAlunos [] = Set []
+    criaSetAlunos ("":ls) = criaSetAlunos ls
     criaSetAlunos (l:ls) = inserir aluno (criaSetAlunos ls)
         where
             partes = splitPor ',' l
-            aluno = Aluno (read (head partes)) (partes !! 1) (partes !! 2)
+            aluno = Aluno (read (partes !! 0)) (partes !! 1) (partes !! 2)
     
     alunoParaLinha :: Aluno -> String
     alunoParaLinha (Aluno cod nome email) = show cod ++ ", " ++ nome ++ ", " ++ email
