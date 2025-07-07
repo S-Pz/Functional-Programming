@@ -120,7 +120,7 @@ module Biblioteca.Livros where
     criaSetLivros (l:ls) = inserir livro (criaSetLivros ls)
         where
             partes = splitPor ',' l
-            livro = Livro (read (head partes)) (partes !! 1) (read (partes !! 2) :: Int)
+            livro = Livro (read (partes !! 0)) (partes !! 1) (read (partes !! 2) :: Int)
 
     livroParaLinha :: Livro -> String
     livroParaLinha (Livro reg titulo edicao) = show reg ++ ", " ++ titulo ++ ", " ++ show edicao
@@ -129,14 +129,17 @@ module Biblioteca.Livros where
     setParaString (Set livros) = juntarComNovaLinha (map livroParaLinha livros)
 
     livroEstaEmprestado :: Int -> String -> Bool
-    livroEstaEmprestado regLivro linha = estaNaLista (show regLivro) listaDeCodigos
-      where
-        listaDeCodigos   = splitPor ';' codigosLivrosStr
-        codigosLivrosStr = extrairCampo ',' 4 linha
-
-        estaNaLista :: String -> [String] -> Bool
-        estaNaLista _ [] = False 
-        estaNaLista item (x:xs)
-            | item == x = True 
-            | otherwise = estaNaLista item xs 
+    livroEstaEmprestado regLivro linha
+        | length partes < 5 = False
+        | otherwise         = estaNaLista (show regLivro) listaDeCodigos
+            where
+                partes = splitPor ',' linha
+                codigosLivrosStr = partes !! 4
+                listaDeCodigos = splitPor ';' codigosLivrosStr
+                
+                estaNaLista :: String -> [String] -> Bool
+                estaNaLista _ [] = False 
+                estaNaLista item (x:xs)
+                    | item == x = True 
+                    | otherwise = estaNaLista item xs
 
