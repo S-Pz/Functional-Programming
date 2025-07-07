@@ -94,7 +94,7 @@ module Biblioteca.Livros where
                 "Visualizar" -> do
                     putStrLn "Você escolheu Vizualizar Livros."
                     setLivros <- obter :: IO (Set Livro)
-                    print setLivros
+                    imprimirSet setLivros
                     showMenu (Proxy :: Proxy Livro)
                     return "Vizualizar"
                 "Apagar" -> do
