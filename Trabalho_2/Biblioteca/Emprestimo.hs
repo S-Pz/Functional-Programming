@@ -72,7 +72,7 @@ module Biblioteca.Emprestimo where
             setLivros <- obter :: IO (Set Livro)
         
             conteudo <- readFile "emprestimos.txt"
-            let linhas = lines conteudo
+            let linhas = dividirPorNovaLinha conteudo
             return (criaSetEmprestimos linhas setAlunos setLivros)
         
         buscar num (Set []) = Nothing
@@ -82,7 +82,7 @@ module Biblioteca.Emprestimo where
         
         apagar _ num = do
             conteudo <- readFile "emprestimos.txt"
-            let linhas = lines conteudo
+            let linhas = dividirPorNovaLinha conteudo
             
             let linhasFiltradas = filter (\linha -> extrairCampo ',' 0 linha /= show num) linhas
 
@@ -90,7 +90,7 @@ module Biblioteca.Emprestimo where
                 then putStrLn "Empréstimo com o número informado não foi encontrado."
             
             else do
-                writeFile "emprestimos.txt" (unlines linhasFiltradas)
+                writeFile "emprestimos.txt" (juntarComNovaLinha linhasFiltradas)
                 putStrLn "Empréstimo apagado com sucesso!"
 
         showMenu _ = do

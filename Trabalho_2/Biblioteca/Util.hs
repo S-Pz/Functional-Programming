@@ -57,3 +57,19 @@ module Biblioteca.Util where
     joinPor _ [] = ""
     joinPor _ [x] = x
     joinPor sep (x:xs) = x ++ [sep] ++ joinPor sep xs
+
+    dividirPorNovaLinha :: String -> [String]
+    dividirPorNovaLinha = splitPor '\n'
+
+    qualquer :: (a -> Bool) -> [a] -> Bool
+    qualquer _ [] = False
+    qualquer p (x:xs)
+        | p x       = True
+        | otherwise = qualquer p xs
+
+    juntarComNovaLinha :: [String] -> String
+    juntarComNovaLinha [] = ""
+    juntarComNovaLinha xs = concat [s ++ "\n" | s <- xs]
+      where
+        concat [] = ""
+        concat (str:strs) = str ++ concat strs
