@@ -56,7 +56,7 @@ module Biblioteca.Livros where
             emprestimoConteudo <- readFile "emprestimos.txt"
             
             let emprestimos  = dividirPorNovaLinha emprestimoConteudo
-            let temPendencia = qualquer (\linha -> show reg `elem` (splitPor ';' (extrairCampo ',' 4 linha))) emprestimos
+            let temPendencia = qualquer (livroEstaEmprestado reg) emprestimos
 
             if temPendencia then
                 putStrLn "Este livro não pode ser apagado, pois está emprestado."
@@ -126,3 +126,16 @@ module Biblioteca.Livros where
 
     setParaString :: Set Livro -> String
     setParaString (Set livros) = juntarComNovaLinha (map livroParaLinha livros)
+
+    livroEstaEmprestado :: Int -> String -> Bool
+    livroEstaEmprestado regLivro linha = estaNaLista (show regLivro) listaDeCodigos
+      where
+        codigosLivrosStr = extrairCampo ',' 4 linha
+        listaDeCodigos   = splitPor ';' codigosLivrosStr
+
+        estaNaLista :: String -> [String] -> Bool
+        estaNaLista _ [] = False 
+        estaNaLista item (x:xs)
+            | item == x = True 
+            | otherwise = estaNaLista item xs 
+

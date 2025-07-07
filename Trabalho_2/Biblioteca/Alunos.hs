@@ -54,7 +54,7 @@ module Biblioteca.Alunos where
             empretimoConteudo <- readFile "emprestimos.txt"
             let emprestimos = dividirPorNovaLinha  empretimoConteudo
 
-            let temPendencia = qualquer (\linha -> extrairCampo ',' 1 linha == show cod) emprestimos
+            let temPendencia = qualquer (alunoTemEmprestimo cod) emprestimos
 
             if temPendencia then
                 putStrLn "Este aluno não pode ser apagado, pois possui um empréstimo"
@@ -124,3 +124,6 @@ module Biblioteca.Alunos where
 
     setParaString :: Set Aluno -> String
     setParaString (Set alunos) = juntarComNovaLinha (map alunoParaLinha alunos)
+
+    alunoTemEmprestimo :: Int -> String -> Bool
+    alunoTemEmprestimo codAluno linha = extrairCampo ',' 1 linha == show codAluno

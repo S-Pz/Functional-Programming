@@ -40,6 +40,11 @@ module Biblioteca.Util where
             where
                 resto = splitPor delimitador cs
 
+    parseData :: String -> Data
+    parseData str = Data (read d) (read m) (read a)
+        where
+            [d, m, a] = splitPor '/' str
+
     -- Retorna o elemento em uma posição específica de uma lista.
     elementoNaPosicao :: Int -> [String] -> String
     elementoNaPosicao 0 (x:_)  = x
