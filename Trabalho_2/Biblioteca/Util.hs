@@ -77,3 +77,18 @@ module Biblioteca.Util where
       where
         concat [] = ""
         concat (str:strs) = str ++ concat strs
+
+
+    showMainMenu :: IO (String)
+    showMainMenu = do
+        putStrLn "=========================================="
+        putStrLn "           MENU PRINCIPAL"
+        putStrLn "------------------------------------------"
+        putStrLn "SELECIONE O MENU DESEJADO:"
+        putStrLn "Alunos"
+        putStrLn "Livros"
+        putStrLn "Emprestimo"
+        putStrLn "Sair"
+        putStrLn "=========================================="
+        opcao <- getLine
+        return opcao

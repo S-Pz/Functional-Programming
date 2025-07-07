@@ -10,20 +10,7 @@ import Biblioteca.Util
 
 main :: IO()
 main = do
-    showMainMenu
-
-showMainMenu :: IO ()
-showMainMenu = do
-    putStrLn "=========================================="
-    putStrLn "           MENU PRINCIPAL"
-    putStrLn "------------------------------------------"
-    putStrLn "SELECIONE O MENU DESEJADO:"
-    putStrLn "Alunos"
-    putStrLn "Livros"
-    putStrLn "Emprestimo"
-    putStrLn "Sair"
-    putStrLn "=========================================="
-    opcao <- getLine
+    opcao <- showMainMenu
     
     case opcao of
         "Alunos" -> do
@@ -39,7 +26,10 @@ showMainMenu = do
             putStrLn "Encerrando sistema..."
         _ -> do
             putStrLn "Opção inválida. Tente novamente."
-            showMainMenu
+            opcao <- showMainMenu
+            putStrLn ""
     if opcao /= "Sair" 
-        then showMainMenu
+        then main
         else putStrLn "Obrigado por utilzar nosso sistema"
+            
+        
