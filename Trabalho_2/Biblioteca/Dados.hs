@@ -19,10 +19,19 @@ module Biblioteca.Dados where
     --imprimir s = putStrLn $ impr s
     --buscar = search
 
-  -- impr :: Show t => Set t -> String
-  -- impr (EmptySet) = ""
-  -- impr (St x EmptySet) = show x
-  -- impr (St x ls) = show x ++ "," ++ impr ls
+  imprimirSet :: (Dado d) => Set d -> IO ()
+  imprimirSet (Set []) = putStrLn "\n>> Nenhum item para exibir."
+  imprimirSet (Set xs) = do
+    putStrLn ""
+    imprimirLista xs 
+    
+    where
+      imprimirLista :: (Dado d) => [d] -> IO ()
+      imprimirLista [] = return () 
+      imprimirLista (item:resto) = do 
+          imprimir item
+          putStrLn "------------------------------------------"
+          imprimirLista resto
 
   vazio :: Set a
   vazio = Set []

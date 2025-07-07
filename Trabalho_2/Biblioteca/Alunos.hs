@@ -92,7 +92,7 @@ module Biblioteca.Alunos where
                 "Visualizar" -> do
                     putStrLn "Você escolheu Vizualizar Alunos."
                     setAlunos <- obter :: IO (Set Aluno)
-                    print setAlunos
+                    imprimirSet setAlunos
                     showMenu (Proxy :: Proxy Aluno)
                     return "Visualizar"
                 "Apagar" -> do

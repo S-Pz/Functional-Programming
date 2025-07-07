@@ -109,7 +109,7 @@ module Biblioteca.Emprestimo where
                     setAlunosAtualizado <- obter :: IO (Set Aluno)
                     setLivrosAtualizado <- obter :: IO (Set Livro)
                     setEmprestimos <- obter :: IO (Set Emprestimo)
-                    print setEmprestimos
+                    imprimirSet setEmprestimos
                     showMenu (Proxy :: Proxy Emprestimo)
                     return "Vizualizar"
                 "Apagar" -> do
