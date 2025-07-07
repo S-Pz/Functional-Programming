@@ -42,7 +42,7 @@ module Biblioteca.Alunos where
         
         obter = do
             conteudo <- readFile "alunos.txt"
-            let linhas = lines conteudo
+            let linhas = dividirPorNovaLinha conteudo
             return (criaSetAlunos linhas)
         
         buscar cod (Set []) = Nothing
@@ -52,12 +52,12 @@ module Biblioteca.Alunos where
         
         apagar _ cod = do
             empretimoConteudo <- readFile "emprestimos.txt"
-            let emprestimos = lines empretimoConteudo
+            let emprestimos = dividirPorNovaLinha  empretimoConteudo
 
-            let temPendencia = any (\linha -> extrairCampo ',' 1 linha == show cod) emprestimos
+            let temPendencia = qualquer (\linha -> extrairCampo ',' 1 linha == show cod) emprestimos
 
             if temPendencia then
-                putStrLn "\n[!] - Este aluno não pode ser apagado, pois possui um empréstimo"
+                putStrLn "Este aluno não pode ser apagado, pois possui um empréstimo"
             else do
                 setAlunos <- obter :: IO (Set Aluno)
                 let aluno = buscar cod setAlunos
@@ -123,4 +123,4 @@ module Biblioteca.Alunos where
     alunoParaLinha (Aluno cod nome email) = show cod ++ ", " ++ nome ++ ", " ++ email
 
     setParaString :: Set Aluno -> String
-    setParaString (Set alunos) = unlines (map alunoParaLinha alunos)
+    setParaString (Set alunos) = juntarComNovaLinha (map alunoParaLinha alunos)

@@ -44,7 +44,7 @@ module Biblioteca.Livros where
 
         obter = do
             conteudo <- readFile "livros.txt"
-            let linhas = lines conteudo
+            let linhas = dividirPorNovaLinha conteudo
             return (criaSetLivros linhas)
         
         buscar reg (Set []) = Nothing
@@ -55,8 +55,8 @@ module Biblioteca.Livros where
         apagar _ reg = do
             emprestimoConteudo <- readFile "emprestimos.txt"
             
-            let emprestimos  = lines emprestimoConteudo
-            let temPendencia = any (\linha -> show reg `elem` (splitPor ';'(extrairCampo ',' 4 linha))) emprestimos
+            let emprestimos  = dividirPorNovaLinha emprestimoConteudo
+            let temPendencia = qualquer (\linha -> show reg `elem` (splitPor ';' (extrairCampo ',' 4 linha))) emprestimos
 
             if temPendencia then
                 putStrLn "Este livro não pode ser apagado, pois está emprestado."
@@ -125,4 +125,4 @@ module Biblioteca.Livros where
     livroParaLinha (Livro reg titulo edicao) = show reg ++ ", " ++ titulo ++ ", " ++ show edicao
 
     setParaString :: Set Livro -> String
-    setParaString (Set livros) = unlines (map livroParaLinha livros)
+    setParaString (Set livros) = juntarComNovaLinha (map livroParaLinha livros)
