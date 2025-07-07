@@ -116,6 +116,7 @@ module Biblioteca.Livros where
     
     criaSetLivros :: [String] -> Set Livro
     criaSetLivros [] = Set []
+    criaSetLivros ("":ls) = criaSetLivros ls
     criaSetLivros (l:ls) = inserir livro (criaSetLivros ls)
         where
             partes = splitPor ',' l
@@ -130,8 +131,8 @@ module Biblioteca.Livros where
     livroEstaEmprestado :: Int -> String -> Bool
     livroEstaEmprestado regLivro linha = estaNaLista (show regLivro) listaDeCodigos
       where
-        codigosLivrosStr = extrairCampo ',' 4 linha
         listaDeCodigos   = splitPor ';' codigosLivrosStr
+        codigosLivrosStr = extrairCampo ',' 4 linha
 
         estaNaLista :: String -> [String] -> Bool
         estaNaLista _ [] = False 

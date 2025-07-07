@@ -140,6 +140,7 @@ module Biblioteca.Emprestimo where
 
     criaSetEmprestimos :: [String] -> Set Aluno -> Set Livro -> Set Emprestimo
     criaSetEmprestimos [] _ _ = Set []
+    criaSetEmprestimos ("":resto) alunosSet livrosSet = criaSetEmprestimos resto alunosSet livrosSet
     criaSetEmprestimos (linha:resto) alunosSet livrosSet =
         case (alunoEncontrado, livrosEmprestados) of
             (Just alunoVal, livrosVal) ->

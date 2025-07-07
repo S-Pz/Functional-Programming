@@ -32,7 +32,7 @@ module Biblioteca.Dados where
 
   inserir :: Eq a => a -> Set a -> Set a
   inserir x (Set xs)
-    | buscarSet x (Set xs) = Set xs  -- já está presente, não insere
+    | buscarSet x (Set xs) = Set xs 
     | otherwise   = Set (x : xs)
 
   buscarSet :: Eq a => a -> Set a -> Bool

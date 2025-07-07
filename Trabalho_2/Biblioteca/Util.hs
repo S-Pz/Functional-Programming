@@ -8,28 +8,28 @@ module Biblioteca.Util where
     } deriving (Eq, Show)
 
     dataStr:: Data -> String
-    dataStr (Data d m a) = formata d ++ "/" ++ formata m ++ "/" ++ show a
+    dataStr (Data d m a) = formataData d ++ "/" ++ formataData m ++ "/" ++ show a
         where
-            formata n = if n < 10 
+            formataData n = if n < 10 
                 then 
                     '0' : show n
                 else
                     show n
 
-    repete :: a -> Int -> [a]
-    repete elemento n
-        | n <= 0 = []
-        | otherwise = elemento : repete elemento (n - 1)
-
-    alinhaEsq :: String -> Char -> Int -> String
-    alinhaEsq str c n = str ++ repete c (n - length str)
-
-    alinhaDir :: String -> Char -> Int -> String
-    alinhaDir str c n = repete c (n - length str) ++ str
-
-    formata:: String -> String -> String
+    formata :: String -> String -> String
     formata [] [] = []
     formata chave valor = alinhaEsq chave '.' 30 ++ ":" ++ alinhaDir valor ' ' 50
+        where
+            repete :: a -> Int -> [a]
+            repete elemento n
+                | n <= 0    = []
+                | otherwise = elemento : repete elemento (n - 1)
+
+            alinhaEsq :: String -> Char -> Int -> String
+            alinhaEsq str c n = str ++ repete c (n - length str)
+
+            alinhaDir :: String -> Char -> Int -> String
+            alinhaDir str c n = repete c (n - length str) ++ str
     
     -- Divide uma string em uma lista de strings com base em um caractere delimitador.
     splitPor :: Char -> String -> [String]
@@ -46,17 +46,17 @@ module Biblioteca.Util where
             [d, m, a] = splitPor '/' str
 
     -- Retorna o elemento em uma posição específica de uma lista.
-    elementoNaPosicao :: Int -> [String] -> String
-    elementoNaPosicao 0 (x:_)  = x
-    elementoNaPosicao n (_:xs) = elementoNaPosicao (n - 1) xs
-    elementoNaPosicao _ []     = error "Índice fora da faixa"
+    -- elementoNaPosicao :: Int -> [String] -> String
+    -- elementoNaPosicao 0 (x:_)  = x
+    -- elementoNaPosicao n (_:xs) = elementoNaPosicao (n - 1) xs
+    -- elementoNaPosicao _ []     = error "Índice fora da faixa"
 
     -- Extrai um campo específico de uma string que é dividida por um delimitador.
     extrairCampo :: Char -> Int -> String -> String
-    extrairCampo delimitador n linha =
-        let partes = splitPor delimitador linha
-        in elementoNaPosicao n partes
-
+    extrairCampo delimitador n linha  = partes !! n
+        where
+            partes = splitPor delimitador linha
+         
     -- Une uma lista de strings em uma única string, separadas por um caractere.
     joinPor :: Char -> [String] -> String
     joinPor _ [] = ""
