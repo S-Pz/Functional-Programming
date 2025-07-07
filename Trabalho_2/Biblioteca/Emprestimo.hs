@@ -16,15 +16,6 @@ module Biblioteca.Emprestimo where
         livros:: [Livro]
     } deriving (Eq, Show)
 
-    adicionaEmprestimos :: IO [String]
-    adicionaEmprestimos = do
-        putStrLn "Digite o registro de um livro (ou deixe em branco para finalizar):"
-        regStr <- getLine
-        if regStr == "" then return []
-        else do
-            maisRegs <- adicionaEmprestimos
-            return (regStr : maisRegs)
-    
     instance Dado Emprestimo where
         imprimir (Emprestimo num aluno dataEmp dataDev livros) = do
             putStrLn "========================================="
@@ -84,7 +75,7 @@ module Biblioteca.Emprestimo where
             conteudo <- readFile "emprestimos.txt"
             let linhas = dividirPorNovaLinha conteudo
             
-            let linhasFiltradas = filter (\linha -> extrairCampo ',' 0 linha /= show num) linhas
+            let linhasFiltradas = filter (naoEhEmprestimo num) linhas
 
             if length linhasFiltradas == length linhas
                 then putStrLn "Empréstimo com o número informado não foi encontrado."
@@ -138,6 +129,15 @@ module Biblioteca.Emprestimo where
                     return "Invalido"
             return opcao
     
+    adicionaEmprestimos :: IO [String]
+    adicionaEmprestimos = do
+        putStrLn "Digite o registro de um livro (ou deixe em branco para finalizar):"
+        regStr <- getLine
+        if regStr == "" then return []
+        else do
+            maisRegs <- adicionaEmprestimos
+            return (regStr : maisRegs)
+
     criaSetEmprestimos :: [String] -> Set Aluno -> Set Livro -> Set Emprestimo
     criaSetEmprestimos [] _ _ = Set []
     criaSetEmprestimos (linha:resto) alunosSet livrosSet =
@@ -163,7 +163,6 @@ module Biblioteca.Emprestimo where
             Just l  -> l : buscaLivros rs set
             Nothing -> buscaLivros rs set 
 
-    parseData :: String -> Data
-    parseData str = Data (read d) (read m) (read a)
-        where
-            [d, m, a] = splitPor '/' str
+    -- Verifica se a linha NÃO corresponde ao empréstimo a ser apagado.
+    naoEhEmprestimo :: Int -> String -> Bool
+    naoEhEmprestimo numEmprestimo linha = extrairCampo ',' 0 linha /= show numEmprestimo
