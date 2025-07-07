@@ -29,16 +29,21 @@ module Biblioteca.Livros where
             
             let registroLivro = read registroStr :: Int
 
-            putStrLn "Digite o título do livro:"
-            tituloLivro <- getLine
+            listaDeLivros <- (obter :: IO (Set Livro))
 
-            putStrLn "Digite a edição do livro:"
-            edicaoStr <- getLine
-            let edicaoLivro = read edicaoStr :: Int
+            if buscar registroLivro listaDeLivros /= Nothing
+                then putStrLn "Codigo de livro ja existente!"
+                else do
+                    putStrLn "Digite o título do livro:"
+                    tituloLivro <- getLine
 
-            handle <- openFile "livros.txt" AppendMode
-            hPutStrLn handle (show registroLivro ++ ", " ++ tituloLivro ++ ", " ++ show edicaoLivro)
-            hClose handle
+                    putStrLn "Digite a edição do livro:"
+                    edicaoStr <- getLine
+                    let edicaoLivro = read edicaoStr :: Int
+
+                    handle <- openFile "livros.txt" AppendMode
+                    hPutStrLn handle (show registroLivro ++ ", " ++ tituloLivro ++ ", " ++ show edicaoLivro)
+                    hClose handle
 
             putStrLn "\nLivro cadastrado com sucesso!"
 

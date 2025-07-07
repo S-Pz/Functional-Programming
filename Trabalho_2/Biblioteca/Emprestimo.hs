@@ -39,23 +39,28 @@ module Biblioteca.Emprestimo where
             num <- getLine
             let numEmp = read num :: Int
 
-            putStrLn "Digite o código do aluno:"
-            codAlunoStr <- getLine
+            listaDeEmprestimos <- (obter :: IO (Set Emprestimo))
 
-            putStrLn "Digite a data do empréstimo (ex: DD/MM/AAAA):"
-            dataEmp <- getLine
+            if buscar numEmp listaDeEmprestimos /= Nothing
+                then putStrLn "Codigo de emprestimo ja existente!"
+                else do
+                    putStrLn "Digite o código do aluno:"
+                    codAlunoStr <- getLine
 
-            putStrLn "Digite a data de devolução (ex: DD/MM/AAAA):"
-            dataDev <- getLine
+                    putStrLn "Digite a data do empréstimo (ex: DD/MM/AAAA):"
+                    dataEmp <- getLine
 
-            putStrLn "Adicionar Livros"
-            listaRegistros <- adicionaEmprestimos
-            
-            let linhaEmprestimo = num ++ "," ++ codAlunoStr ++ "," ++ dataEmp ++ "," ++ dataDev ++ "," ++ joinPor ';' listaRegistros
-        
-            handle <- openFile "emprestimos.txt" AppendMode
-            hPutStrLn handle linhaEmprestimo
-            hClose handle
+                    putStrLn "Digite a data de devolução (ex: DD/MM/AAAA):"
+                    dataDev <- getLine
+
+                    putStrLn "Adicionar Livros"
+                    listaRegistros <- adicionaEmprestimos
+                    
+                    let linhaEmprestimo = num ++ "," ++ codAlunoStr ++ "," ++ dataEmp ++ "," ++ dataDev ++ "," ++ joinPor ';' listaRegistros
+                
+                    handle <- openFile "emprestimos.txt" AppendMode
+                    hPutStrLn handle linhaEmprestimo
+                    hClose handle
 
         obter = do
 

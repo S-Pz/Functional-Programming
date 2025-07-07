@@ -27,18 +27,23 @@ module Biblioteca.Alunos where
             codigoStr <- getLine
             let codigoAluno = read codigoStr :: Int 
 
-            putStrLn "Digite o nome do aluno:"
-            nomeAluno <- getLine
+            listaDeAlunos <- (obter :: IO (Set Aluno))
+            
+            if buscar codigoAluno listaDeAlunos /= Nothing
+                then putStrLn "Codigo de aluno ja existente!"
+                else do
+                    putStrLn "Digite o nome do aluno:"
+                    nomeAluno <- getLine
 
-            putStrLn "Digite o email do aluno:"
-            emailAluno <- getLine
+                    putStrLn "Digite o email do aluno:"
+                    emailAluno <- getLine
 
-            handle <- openFile "alunos.txt" AppendMode
-            hPutStrLn handle (show codigoAluno ++ ", " ++ nomeAluno ++ ", " ++ emailAluno)
-            hClose handle
+                    handle <- openFile "alunos.txt" AppendMode
+                    hPutStrLn handle (show codigoAluno ++ ", " ++ nomeAluno ++ ", " ++ emailAluno)
+                    hClose handle
 
-            putStrLn "\nAluno cadastrado com sucesso!"
-            putStrLn "=========================================="
+                    putStrLn "\nAluno cadastrado com sucesso!"
+                    putStrLn "=========================================="
         
         obter = do
             conteudo <- readFile "alunos.txt"
