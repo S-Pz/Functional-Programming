@@ -1,4 +1,12 @@
-module Biblioteca.Livros where 
+module Biblioteca.Livros (
+    Livro (..),
+    imprimir,
+    cadastrar,
+    obter,
+    buscar,
+    apagar,
+    showMenu
+) where 
     
     import System.IO
     import Data.Proxy
@@ -76,6 +84,7 @@ module Biblioteca.Livros where
                         let conteudoParaSalvar = setParaString novoSet
                         writeFile "livros.txt" conteudoParaSalvar
                         putStrLn "Livro apagado com sucesso!"
+    
         showMenu _ = do
             let dummyLivro = Livro 0 "" 0
 

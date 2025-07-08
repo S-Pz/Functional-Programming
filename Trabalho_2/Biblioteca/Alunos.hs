@@ -1,4 +1,12 @@
-module Biblioteca.Alunos where 
+module Biblioteca.Alunos (
+    Aluno (..),
+    imprimir,
+    cadastrar,
+    obter,
+    buscar,
+    apagar,
+    showMenu
+) where 
     
     import System.IO
     import Data.Proxy

@@ -6,7 +6,7 @@ module Biblioteca.Util where
         ano:: Int
     } deriving (Eq, Show)
 
-    dataStr:: Data -> String
+    dataStr :: Data -> String
     dataStr (Data d m a) = formataData d ++ "/" ++ formataData m ++ "/" ++ show a
         where
             formataData n = if n < 10 
