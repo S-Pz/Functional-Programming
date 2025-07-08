@@ -182,7 +182,8 @@ module Biblioteca.Emprestimo (
     naoEhEmprestimo numEmprestimo linha = extrairCampo ',' 0 linha /= show numEmprestimo
 
     imprimirLista :: [Livro] -> IO ()
-    imprimirLista []     = return ()
-    imprimirLista (x:xs) = do
-        print x
-        imprimirLista xs
+    imprimirLista []     = return () 
+    imprimirLista (l:ls) = do
+        imprimir l       
+        putStrLn "---" 
+        imprimirLista ls 
