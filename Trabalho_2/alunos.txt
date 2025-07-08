@@ -1,4 +1,1 @@
-2120,  Luiz,  felipe@gmail.com
-2020,  Joao,  email do joao
-1,  axsd,  12dsa
-21321,  pedrosas,  emais
+1, Luiz, email

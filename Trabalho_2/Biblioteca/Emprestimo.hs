@@ -1,4 +1,12 @@
-module Biblioteca.Emprestimo where
+module Biblioteca.Emprestimo (
+    Emprestimo (..),
+    imprimir,
+    cadastrar,
+    obter,
+    buscar,
+    apagar,
+    showMenu
+) where
     import System.IO
     import Data.Proxy
     import Data.Maybe (fromJust)
@@ -27,7 +35,7 @@ module Biblioteca.Emprestimo where
             putStrLn "\n--- Aluno -----------------------------"
             imprimir aluno
             putStrLn "\n--- Livros Emprestados ---------------"
-            mapM_ imprimir livros
+            imprimirLista livros
             putStrLn "========================================="
         
         cadastrar (Emprestimo num aluno dataEmp dataDev livros) = do 
@@ -172,3 +180,9 @@ module Biblioteca.Emprestimo where
     -- Verifica se a linha NÃO corresponde ao empréstimo a ser apagado.
     naoEhEmprestimo :: Int -> String -> Bool
     naoEhEmprestimo numEmprestimo linha = extrairCampo ',' 0 linha /= show numEmprestimo
+
+    imprimirLista :: [Livro] -> IO ()
+    imprimirLista []     = return ()
+    imprimirLista (x:xs) = do
+        print x
+        imprimirLista xs
