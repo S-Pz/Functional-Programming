@@ -44,12 +44,6 @@ module Biblioteca.Util where
         where
             [d, m, a] = splitPor '/' str
 
-    -- Retorna o elemento em uma posição específica de uma lista.
-    -- elementoNaPosicao :: Int -> [String] -> String
-    -- elementoNaPosicao 0 (x:_)  = x
-    -- elementoNaPosicao n (_:xs) = elementoNaPosicao (n - 1) xs
-    -- elementoNaPosicao _ []     = error "Índice fora da faixa"
-
     -- Extrai um campo específico de uma string que é dividida por um delimitador.
     extrairCampo :: Char -> Int -> String -> String
     extrairCampo delimitador n linha  = partes !! n
@@ -65,6 +59,7 @@ module Biblioteca.Util where
     dividirPorNovaLinha :: String -> [String]
     dividirPorNovaLinha = splitPor '\n'
 
+    -- Verifica se pelo menos um elemento de uma lista satisfaz uma condição.
     qualquer :: (a -> Bool) -> [a] -> Bool
     qualquer _ [] = False
     qualquer p (x:xs)
@@ -77,7 +72,6 @@ module Biblioteca.Util where
       where
         concat [] = ""
         concat (str:strs) = str ++ concat strs
-
 
     showMainMenu :: IO (String)
     showMainMenu = do
